@@ -367,7 +367,7 @@
 
       <div class="center-col">
         <div class="meta-row">
-          <div class="q-progress" id="q-progress">Soru 1/50</div>
+          <div class="q-progress" id="q-progress">Soru 1/55</div>
           <div class="q-category" id="q-category">Genel Kültür</div>
           <div class="timer-wrap">
             <svg width="64" height="64" viewBox="0 0 64 64">
@@ -435,7 +435,7 @@ if (!firebase.apps.length) {
 const db = firebase.database();
 
 const QUESTION_BANK = [
-  // MEVCUT 15 SORU
+  // 15 MEVCUT SORU
   { id: 1, category: "Tarih", question: "Türkiye Cumhuriyeti hangi yılda kurulmuştur?", options: ["1920", "1921", "1922", "1923"], answer: 3 },
   { id: 2, category: "Coğrafya", question: "Türkiye'nin başkenti neresidir?", options: ["İstanbul", "Ankara", "İzmir", "Bursa"], answer: 1 },
   { id: 3, category: "Bilim", question: "Güneş Sistemimizdeki en büyük gezegen hangisidir?", options: ["Mars", "Venüs", "Jüpiter", "Satürn"], answer: 2 },
@@ -511,6 +511,7 @@ let myTeamName = "";
 let roomRef = null;
 let timerInterval = null;
 let isAnsweredCurrentQ = false;
+let advancingNext = false;
 const QUESTION_TIME = 20;
 
 const screens = {
@@ -664,12 +665,6 @@ function setupLobbyListeners() {
   });
 }
 
-document.getElementById('lobby-ready-btn').addEventListener('click', function() {
-  roomRef.child(myRole).update({ ready: true });
-  document.getElementById('lobby-ready-btn').disabled = true;
-  document.getElementById('lobby-hint').textContent = "Rakibin hazır olması bekleniyor...";
-});
-
 let countdownStarted = false;
 function startCountdown() {
   if(countdownStarted) return;
@@ -740,6 +735,7 @@ function renderQuestion(qIndex, data) {
   if(activeQIndex !== qIndex) {
     activeQIndex = qIndex;
     isAnsweredCurrentQ = false;
+    advancingNext = false;
 
     document.getElementById('q-progress').textContent = "Soru " + (qIndex + 1) + "/" + QUESTION_BANK.length;
     document.getElementById('q-category').textContent = question.category;
@@ -779,7 +775,8 @@ function renderQuestion(qIndex, data) {
     highlightMyAnswer(myData.answer);
   }
 
-  if(myData.answer !== -1 && rivalData.answer !== -1) {
+  if(myData.answer !== -1 && rivalData.answer !== -1 && !advancingNext) {
+    advancingNext = true;
     if(myRole === 'host') {
       setTimeout(function() { advanceToNextQuestion(qIndex); }, 1500);
     }
@@ -811,7 +808,8 @@ function startTimer(qStartTime) {
     if(remaining <= 0) {
       clearInterval(timerInterval);
       disableOptions();
-      if(myRole === 'host') {
+      if(myRole === 'host' && !advancingNext) {
+        advancingNext = true;
         advanceToNextQuestion(activeQIndex);
       }
     }
@@ -856,10 +854,10 @@ function disableOptions() {
 function advanceToNextQuestion(currentQIndex) {
   roomRef.update({
     currentQ: currentQIndex + 1,
-    qStartTime: Date.now(),
-    'host/answer': -1,
-    'guest/answer': -1
+    qStartTime: Date.now()
   });
+  roomRef.child('host').update({ answer: -1 });
+  roomRef.child('guest').update({ answer: -1 });
 }
 
 function showResults(data) {
