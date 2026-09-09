@@ -1,378 +1,50 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bilgi Yarışması</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+const QUESTION_BANK = [
+  // 1. GENEL KÜLTÜR (5 Soru)
+  { id: 1, category: "Genel Kültür", question: "Dünyanın en uzun nehri hangisidir?", options: ["Amazon", "Nil", "Fırat", "Tuna"], answer: 1 },
+  { id: 2, category: "Genel Kültür", question: "İstiklal Marşı'mızın şairi kimdir?", options: ["Mehmet Âkif Ersoy", "Yahya Kemal", "Ziya Gökalp", "Namık Kemal"], answer: 0 },
+  { id: 3, category: "Genel Kültür", question: "Mona Lisa tablosu hangi ünlü ressama aittir?", options: ["Pablo Picasso", "Leonardo da Vinci", "Vincent van Gogh", "Salvador Dalí"], answer: 1 },
+  { id: 4, category: "Genel Kültür", question: "Pusulanın ana yönlerinden 'N' harfi hangi yönü gösterir?", options: ["Güney", "Kuzey", "Doğu", "Batı"], answer: 1 },
+  { id: 5, category: "Genel Kültür", question: "Olimpiyat halkalarında kaç farklı renk bulunur?", options: ["4", "5", "6", "7"], answer: 1 },
 
-    body {
-      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      color: #333;
-    }
+  // 2. DÜNYA (5 Soru)
+  { id: 6, category: "Dünya", question: "Yüzölçümü bakımından dünyanın en büyük ülkesi hangisidir?", options: ["Çin", "Kanada", "Amerika Birleşik Devletleri", "Rusya"], answer: 3 },
+  { id: 7, category: "Dünya", question: "Dünyanın en büyük okyanusu hangisidir?", options: ["Atlas Okyanusu", "Hint Okyanusu", "Büyük Okyanus (Pasifik)", "Arktik Okyanusu"], answer: 2 },
+  { id: 8, category: "Dünya", question: "Yüzölçümü en büyük kıta hangisidir?", options: ["Afrika", "Avrupa", "Asya", "Amerika"], answer: 2 },
+  { id: 9, category: "Dünya", question: "İtalya'nın başkenti neresidir?", options: ["Milano", "Venedik", "Roma", "Napoli"], answer: 2 },
+  { id: 10, category: "Dünya", question: "Eyfel Kulesi hangi şehirde yer alır?", options: ["Londra", "Paris", "Berlin", "Madrid"], answer: 1 },
 
-    .quiz-container {
-      background-color: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      width: 100%;
-      max-width: 650px;
-      padding: 30px;
-      position: relative;
-      overflow: hidden;
-    }
+  // 3. GÜNCEL BİLGİ (5 Soru)
+  { id: 11, category: "Güncel Bilgi", question: "Türkiye'nin ilk yerli ve millî otomobil markası hangisidir?", options: ["Devrim", "TOGG", "Anadol", "Şahin"], answer: 1 },
+  { id: 12, category: "Güncel Bilgi", question: "Türkiye'nin ilk astronotu kimdir?", options: ["Alper Gezeravcı", "Tuva Cihangir Atasever", "Umut Yıldız", "Ali Kuşçu"], answer: 0 },
+  { id: 13, category: "Güncel Bilgi", question: "EURO 2024 Avrupa Futbol Şampiyonası hangi ülkede düzenlenmiştir?", options: ["Fransa", "İngiltere", "Almanya", "İspanya"], answer: 2 },
+  { id: 14, category: "Güncel Bilgi", question: "Birleşmiş Milletler (BM) Genel Merkezi hangi şehirdedir?", options: ["Cenevre", "New York", "Brüksel", "Pekin"], answer: 1 },
+  { id: 15, category: "Güncel Bilgi", question: "Türkiye'nin ilk insansız savaş uçağı projesinin adı nedir?", options: ["BAYRAKTAR TB2", "ANKA", "KAAN", "KIZILELMA"], answer: 3 },
 
-    .quiz-header {
-      margin-bottom: 25px;
-    }
+  // 4. İNGİLİZCE BİLMECE (5 Soru)
+  { id: 16, category: "İngilizce Bilmece", question: "I have hands, but I cannot clap. What am I?", options: ["A clock", "A chair", "A tree", "A book"], answer: 0 },
+  { id: 17, category: "İngilizce Bilmece", question: "What has to be broken before you can use it?", options: ["A glass", "An egg", "A phone", "A door"], answer: 1 },
+  { id: 18, category: "İngilizce Bilmece", question: "I speak without a mouth and hear without ears. What am I?", options: ["An echo", "A shadow", "A cloud", "A wind"], answer: 0 },
+  { id: 19, category: "İngilizce Bilmece", question: "What goes up but never comes down?", options: ["A balloon", "Your age", "A plane", "The rain"], answer: 1 },
+  { id: 20, category: "İngilizce Bilmece", question: "What has many keys but can't open a single lock?", options: ["A map", "A piano", "A box", "A house"], answer: 1 },
 
-    .progress-bar-container {
-      width: 100%;
-      height: 10px;
-      background-color: #e0e0e0;
-      border-radius: 5px;
-      margin-bottom: 20px;
-      overflow: hidden;
-    }
+  // 5. UZAY VE EVREN (5 Soru)
+  { id: 21, category: "Uzay & Evren", question: "Güneş Sistemimizdeki en büyük gezegen hangisidir?", options: ["Mars", "Venüs", "Jüpiter", "Satürn"], answer: 2 },
+  { id: 22, category: "Uzay & Evren", question: "Halkalarıyla ünlü olan gezegen hangisidir?", options: ["Satürn", "Uranüs", "Neptün", "Mars"], answer: 0 },
+  { id: 23, category: "Uzay & Evren", question: "'Kızıl Gezegen' olarak bilinen gezegen hangisidir?", options: ["Venüs", "Mars", "Merkür", "Jüpiter"], answer: 1 },
+  { id: 24, category: "Uzay & Evren", question: "Dünya'nın tek doğal uydusu nedir?", options: ["Güneş", "Titan", "Ay", "Phobos"], answer: 2 },
+  { id: 25, category: "Uzay & Evren", question: "Güneş'e en yakın gezegen hangisidir?", options: ["Merkür", "Venüs", "Dünya", "Mars"], answer: 0 },
 
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #11998e, #38ef7d);
-      transition: width 0.3s ease;
-    }
+  // 6. MATEMATİK (5 Soru)
+  { id: 26, category: "Matematik", question: "Bir dik üçgende en uzun kenara ne ad verilir?", options: ["Dik kenar", "Taban", "Hipotenüs", "Yükseklik"], answer: 2 },
+  { id: 27, category: "Matematik", question: "En küçük asal sayı kaçtır?", options: ["0", "1", "2", "3"], answer: 2 },
+  { id: 28, category: "Matematik", question: "Çemberin çevresini bulmak için kullanılan sabit sayı hangisidir?", options: ["Altın Oran", "Pi Sayısı", "Euler Sayısı", "Kök 2"], answer: 1 },
+  { id: 29, category: "Matematik", question: "İç açıları toplamı 180 derece olan geometrik şekil hangisidir?", options: ["Kare", "Dikdörtgen", "Üçgen", "Beşgen"], answer: 2 },
+  { id: 30, category: "Matematik", question: "8'in küpü (8³) kaçtır?", options: ["64", "256", "512", "1024"], answer: 2 },
 
-    .meta-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: 600;
-      color: #555;
-      font-size: 0.95rem;
-    }
-
-    .category-badge {
-      background-color: #e8f0fe;
-      color: #1a73e8;
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .question-text {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #2c3e50;
-      margin-bottom: 25px;
-      line-height: 1.5;
-    }
-
-    .options-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin-bottom: 25px;
-    }
-
-    .option-btn {
-      background-color: #f8f9fa;
-      border: 2px solid #e9ecef;
-      border-radius: 10px;
-      padding: 14px 20px;
-      font-size: 1rem;
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      outline: none;
-    }
-
-    .option-btn:hover:not(:disabled) {
-      background-color: #e9ecef;
-      border-color: #ced4da;
-    }
-
-    .option-btn:disabled {
-      cursor: default;
-    }
-
-    .option-btn.correct {
-      background-color: #d4edda;
-      border-color: #28a745;
-      color: #155724;
-      font-weight: 600;
-    }
-
-    .option-btn.wrong {
-      background-color: #f8d7da;
-      border-color: #dc3545;
-      color: #721c24;
-    }
-
-    .footer-actions {
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    .btn {
-      background-color: #1a73e8;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      font-size: 1rem;
-      font-weight: 600;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    .btn:hover {
-      background-color: #1557b0;
-    }
-
-    .btn:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-
-    /* Result Screen */
-    .result-screen {
-      text-align: center;
-      display: none;
-    }
-
-    .result-screen h2 {
-      font-size: 2rem;
-      color: #2c3e50;
-      margin-bottom: 15px;
-    }
-
-    .score-details {
-      font-size: 1.2rem;
-      margin-bottom: 25px;
-      color: #555;
-    }
-
-    .score-number {
-      font-size: 3rem;
-      font-weight: bold;
-      color: #1a73e8;
-      margin: 10px 0;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="quiz-container">
-    <!-- Quiz Interface -->
-    <div id="quiz-screen">
-      <div class="progress-bar-container">
-        <div class="progress-bar" id="progress-bar"></div>
-      </div>
-      
-      <div class="quiz-header">
-        <div class="meta-info">
-          <span class="category-badge" id="category">Kategori</span>
-          <span id="question-count">Soru 1/35</span>
-        </div>
-      </div>
-
-      <div class="question-text" id="question-text">
-        Soru metni buraya gelecek.
-      </div>
-
-      <div class="options-grid" id="options-container">
-        <!-- Seçenek butonları JavaScript ile eklenecek -->
-      </div>
-
-      <div class="footer-actions">
-        <button class="btn" id="next-btn" disabled>Sonraki Soru</button>
-      </div>
-    </div>
-
-    <!-- Result Interface -->
-    <div id="result-screen" class="result-screen">
-      <h2>Tebrikler! Yarışmayı Tamamladınız.</h2>
-      <p class="score-details">Skorunuz:</p>
-      <div class="score-number" id="score-text">0 / 35</div>
-      <p id="feedback-text" style="margin-bottom: 25px; color: #666;"></p>
-      <button class="btn" id="restart-btn">Yeniden Başla</button>
-    </div>
-  </div>
-
-  <script>
-    const QUESTION_BANK = [
-      // 1. GENEL KÜLTÜR (5 Soru)
-      { id: 1, category: "Genel Kültür", question: "Dünyanın en uzun nehri hangisidir?", options: ["Amazon", "Nil", "Fırat", "Tuna"], answer: 1 },
-      { id: 2, category: "Genel Kültür", question: "İstiklal Marşı'mızın şairi kimdir?", options: ["Mehmet Âkif Ersoy", "Yahya Kemal", "Ziya Gökalp", "Namık Kemal"], answer: 0 },
-      { id: 3, category: "Genel Kültür", question: "Mona Lisa tablosu hangi ünlü ressama aittir?", options: ["Pablo Picasso", "Leonardo da Vinci", "Vincent van Gogh", "Salvador Dalí"], answer: 1 },
-      { id: 4, category: "Genel Kültür", question: "Pusulanın ana yönlerinden 'N' harfi hangi yönü gösterir?", options: ["Güney", "Kuzey", "Doğu", "Batı"], answer: 1 },
-      { id: 5, category: "Genel Kültür", question: "Olimpiyat halkalarında kaç farklı renk bulunur?", options: ["4", "5", "6", "7"], answer: 1 },
-
-      // 2. DÜNYA (5 Soru)
-      { id: 6, category: "Dünya", question: "Yüzölçümü bakımından dünyanın en büyük ülkesi hangisidir?", options: ["Çin", "Kanada", "Amerika Birleşik Devletleri", "Rusya"], answer: 3 },
-      { id: 7, category: "Dünya", question: "Dünyanın en büyük okyanusu hangisidir?", options: ["Atlas Okyanusu", "Hint Okyanusu", "Büyük Okyanus (Pasifik)", "Arktik Okyanusu"], answer: 2 },
-      { id: 8, category: "Dünya", question: "Yüzölçümü en büyük kıta hangisidir?", options: ["Afrika", "Avrupa", "Asya", "Amerika"], answer: 2 },
-      { id: 9, category: "Dünya", question: "İtalya'nın başkenti neresidir?", options: ["Milano", "Venedik", "Roma", "Napoli"], answer: 2 },
-      { id: 10, category: "Dünya", question: "Eyfel Kulesi hangi şehirde yer alır?", options: ["Londra", "Paris", "Berlin", "Madrid"], answer: 1 },
-
-      // 3. GÜNCEL BİLGİ (5 Soru)
-      { id: 11, category: "Güncel Bilgi", question: "Türkiye'nin ilk yerli ve millî otomobil markası hangisidir?", options: ["Devrim", "TOGG", "Anadol", "Şahin"], answer: 1 },
-      { id: 12, category: "Güncel Bilgi", question: "Türkiye'nin ilk astronotu kimdir?", options: ["Alper Gezeravcı", "Tuva Cihangir Atasever", "Umut Yıldız", "Ali Kuşçu"], answer: 0 },
-      { id: 13, category: "Güncel Bilgi", question: "EURO 2024 Avrupa Futbol Şampiyonası hangi ülkede düzenlenmiştir?", options: ["Fransa", "İngiltere", "Almanya", "İspanya"], answer: 2 },
-      { id: 14, category: "Güncel Bilgi", question: "Birleşmiş Milletler (BM) Genel Merkezi hangi şehirdedir?", options: ["Cenevre", "New York", "Brüksel", "Pekin"], answer: 1 },
-      { id: 15, category: "Güncel Bilgi", question: "Türkiye'nin ilk insansız savaş uçağı projesinin adı nedir?", options: ["BAYRAKTAR TB2", "ANKA", "KAAN", "KIZILELMA"], answer: 3 },
-
-      // 4. İNGİLİZCE BİLMECE (5 Soru)
-      { id: 16, category: "İngilizce Bilmece", question: "I have hands, but I cannot clap. What am I?", options: ["A clock", "A chair", "A tree", "A book"], answer: 0 },
-      { id: 17, category: "İngilizce Bilmece", question: "What has to be broken before you can use it?", options: ["A glass", "An egg", "A phone", "A door"], answer: 1 },
-      { id: 18, category: "İngilizce Bilmece", question: "I speak without a mouth and hear without ears. What am I?", options: ["An echo", "A shadow", "A cloud", "A wind"], answer: 0 },
-      { id: 19, category: "İngilizce Bilmece", question: "What goes up but never comes down?", options: ["A balloon", "Your age", "A plane", "The rain"], answer: 1 },
-      { id: 20, category: "İngilizce Bilmece", question: "What has many keys but can't open a single lock?", options: ["A map", "A piano", "A box", "A house"], answer: 1 },
-
-      // 5. UZAY VE EVREN (5 Soru)
-      { id: 21, category: "Uzay & Evren", question: "Güneş Sistemimizdeki en büyük gezegen hangisidir?", options: ["Mars", "Venüs", "Jüpiter", "Satürn"], answer: 2 },
-      { id: 22, category: "Uzay & Evren", question: "Halkalarıyla ünlü olan gezegen hangisidir?", options: ["Satürn", "Uranüs", "Neptün", "Mars"], answer: 0 },
-      { id: 23, category: "Uzay & Evren", question: "'Kızıl Gezegen' olarak bilinen gezegen hangisidir?", options: ["Venüs", "Mars", "Merkür", "Jüpiter"], answer: 1 },
-      { id: 24, category: "Uzay & Evren", question: "Dünya'nın tek doğal uydusu nedir?", options: ["Güneş", "Titan", "Ay", "Phobos"], answer: 2 },
-      { id: 25, category: "Uzay & Evren", question: "Güneş'e en yakın gezegen hangisidir?", options: ["Merkür", "Venüs", "Dünya", "Mars"], answer: 0 },
-
-      // 6. MATEMATİK (5 Soru)
-      { id: 26, category: "Matematik", question: "Bir dik üçgende en uzun kenara ne ad verilir?", options: ["Dik kenar", "Taban", "Hipotenüs", "Yükseklik"], answer: 2 },
-      { id: 27, category: "Matematik", question: "En küçük asal sayı kaçtır?", options: ["0", "1", "2", "3"], answer: 2 },
-      { id: 28, category: "Matematik", question: "Çemberin çevresini bulmak için kullanılan sabit sayı hangisidir?", options: ["Altın Oran", "Pi Sayısı", "Euler Sayısı", "Kök 2"], answer: 1 },
-      { id: 29, category: "Matematik", question: "İç açıları toplamı 180 derece olan geometrik şekil hangisidir?", options: ["Kare", "Dikdörtgen", "Üçgen", "Beşgen"], answer: 2 },
-      { id: 30, category: "Matematik", question: "8'in küpü (8³) kaçtır?", options: ["64", "256", "512", "1024"], answer: 2 },
-
-      // 7. ESKİŞEHİR (5 Soru)
-      { id: 31, category: "Eskişehir", question: "Eskişehir içinden geçen ve şehre hayat veren ünlü nehir hangisidir?", options: ["Kızılırmak", "Yeşilırmak", "Porsuk Çayı", "Sakarya Nehrı"], answer: 2 },
-      { id: 32, category: "Eskişehir", question: "Eskişehir ile özdeşleşen, beyaz renkli ve işlemesiyle ünlü değerli taş hangisidir?", options: ["Oltu Taşı", "Lüle Taşı", "Kehribar", "Zümrüt"], answer: 1 },
-      { id: 33, category: "Eskişehir", question: "Eskişehir'in tarihi evleriyle ünlü turistik semti neresidir?", options: ["Odunpazarı", "Tepebaşı", "Bağlar", "İnönü"], answer: 0 },
-      { id: 34, category: "Eskişehir", question: "Eskişehir'e özgü olan, kıymalı harçla yapılıp yağda kızartılan ünlü lezzet hangisidir?", options: ["Mantı", "Çibörek", "Gözleme", "Pide"], answer: 1 },
-      { id: 35, category: "Eskişehir", question: "1961 yılında Eskişehir Demiryolu Fabrikası'nda üretilen ilk Türk otomobili hangisidir?", options: ["Devrim", "Anadol", "Murat 124", "Toros"], answer: 0 }
-    ];
-
-    let currentQuestionIndex = 0;
-    let score = 0;
-    let selectedOptionIndex = null;
-
-    const quizScreen = document.getElementById('quiz-screen');
-    const resultScreen = document.getElementById('result-screen');
-    const questionTextEl = document.getElementById('question-text');
-    const optionsContainerEl = document.getElementById('options-container');
-    const categoryEl = document.getElementById('category');
-    const questionCountEl = document.getElementById('question-count');
-    const progressBarEl = document.getElementById('progress-bar');
-    const nextBtn = document.getElementById('next-btn');
-    const scoreTextEl = document.getElementById('score-text');
-    const feedbackTextEl = document.getElementById('feedback-text');
-    const restartBtn = document.getElementById('restart-btn');
-
-    function startQuiz() {
-      currentQuestionIndex = 0;
-      score = 0;
-      quizScreen.style.display = 'block';
-      resultScreen.style.display = 'none';
-      loadQuestion();
-    }
-
-    function loadQuestion() {
-      resetState();
-      const currentQuestion = QUESTION_BANK[currentQuestionIndex];
-
-      categoryEl.textContent = currentQuestion.category;
-      questionCountEl.textContent = `Soru ${currentQuestionIndex + 1}/${QUESTION_BANK.length}`;
-      questionTextEl.textContent = currentQuestion.question;
-
-      const progressPercent = ((currentQuestionIndex) / QUESTION_BANK.length) * 100;
-      progressBarEl.style.width = `${progressPercent}%`;
-
-      currentQuestion.options.forEach((option, index) => {
-        const button = document.createElement('button');
-        button.textContent = option;
-        button.classList.add('option-btn');
-        button.addEventListener('click', () => selectOption(index));
-        optionsContainerEl.appendChild(button);
-      });
-    }
-
-    function resetState() {
-      nextBtn.disabled = true;
-      selectedOptionIndex = null;
-      while (optionsContainerEl.firstChild) {
-        optionsContainerEl.removeChild(optionsContainerEl.firstChild);
-      }
-    }
-
-    function selectOption(index) {
-      if (selectedOptionIndex !== null) return; // Zaten seçim yapıldıysa engelle
-
-      selectedOptionIndex = index;
-      const currentQuestion = QUESTION_BANK[currentQuestionIndex];
-      const buttons = optionsContainerEl.querySelectorAll('.option-btn');
-
-      buttons.forEach((button, btnIndex) => {
-        button.disabled = true;
-        if (btnIndex === currentQuestion.answer) {
-          button.classList.add('correct');
-        }
-        if (btnIndex === index && index !== currentQuestion.answer) {
-          button.classList.add('wrong');
-        }
-      });
-
-      if (index === currentQuestion.answer) {
-        score++;
-      }
-
-      nextBtn.disabled = false;
-    }
-
-    function handleNextButton() {
-      currentQuestionIndex++;
-      if (currentQuestionIndex < QUESTION_BANK.length) {
-        loadQuestion();
-      } else {
-        showResults();
-      }
-    }
-
-    function showResults() {
-      quizScreen.style.display = 'none';
-      resultScreen.style.display = 'block';
-      progressBarEl.style.width = '100%';
-
-      scoreTextEl.textContent = `${score} / ${QUESTION_BANK.length}`;
-
-      const percentage = (score / QUESTION_BANK.length) * 100;
-      if (percentage >= 80) {
-        feedbackTextEl.textContent = "Harika bir performans! Mükemmel bilgi seviyesi.";
-      } else if (percentage >= 50) {
-        feedbackTextEl.textContent = "Tebrikler, gayet iyi bir sonuç!";
-      } else {
-        feedbackTextEl.textContent = "Biraz daha pratik yaparak skoru geliştirebilirsin.";
-      }
-    }
-
-    nextBtn.addEventListener('click', handleNextButton);
-    restartBtn.addEventListener('click', startQuiz);
-
-    // Uygulamayı Başlat
-    startQuiz();
-  </script>
-</body>
-</html>
+  // 7. ESKİŞEHİR (5 Soru)
+  { id: 31, category: "Eskişehir", question: "Eskişehir içinden geçen ve şehre hayat veren ünlü nehir hangisidir?", options: ["Kızılırmak", "Yeşilırmak", "Porsuk Çayı", "Sakarya Nehrı"], answer: 2 },
+  { id: 32, category: "Eskişehir", question: "Eskişehir ile özdeşleşen, beyaz renkli ve işlemesiyle ünlü değerli taş hangisidir?", options: ["Oltu Taşı", "Lüle Taşı", "Kehribar", "Zümrüt"], answer: 1 },
+  { id: 33, category: "Eskişehir", question: "Eskişehir'in tarihi evleriyle ünlü turistik semti neresidir?", options: ["Odunpazarı", "Tepebaşı", "Bağlar", "İnönü"], answer: 0 },
+  { id: 34, category: "Eskişehir", question: "Eskişehir'e özgü olan, kıymalı harçla yapılıp yağda kızartılan ünlü lezzet hangisidir?", options: ["Mantı", "Çibörek", "Gözleme", "Pide"], answer: 1 },
+  { id: 35, category: "Eskişehir", question: "1961 yılında Eskişehir Demiryolu Fabrikası'nda üretilen ilk Türk otomobili hangisidir?", options: ["Devrim", "Anadol", "Murat 124", "Toros"], answer: 0 }
+];
