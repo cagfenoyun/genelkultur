@@ -358,7 +358,7 @@
 
       <div class="center-col">
         <div class="meta-row">
-          <div class="q-progress" id="q-progress">Soru 1/15</div>
+          <div class="q-progress" id="q-progress">Soru 1/35</div>
           <div class="q-category" id="q-category">Genel Kültür</div>
           <div class="timer-wrap">
             <svg width="64" height="64" viewBox="0 0 64 64">
@@ -425,21 +425,54 @@ if (!firebase.apps.length) {
 const db = firebase.database();
 
 const QUESTION_BANK = [
-  { id: 1, category: "Tarih", question: "Türkiye Cumhuriyeti hangi yılda kurulmuştur?", options: ["1920", "1921", "1922", "1923"], answer: 3 },
-  { id: 2, category: "Coğrafya", question: "Türkiye'nin başkenti neresidir?", options: ["İstanbul", "Ankara", "İzmir", "Bursa"], answer: 1 },
-  { id: 3, category: "Bilim", question: "Güneş Sistemimizdeki en büyük gezegen hangisidir?", options: ["Mars", "Venüs", "Jüpiter", "Satürn"], answer: 2 },
-  { id: 4, category: "Edebiyat", question: "İstiklal Marşı'mızın şairi kimdir?", options: ["Mehmet Âkif Ersoy", "Yahya Kemal", "Ziya Gökalp", "Namık Kemal"], answer: 0 },
-  { id: 5, category: "Genel Kültür", question: "Dünyanın en uzun nehri hangisidir?", options: ["Amazon", "Nil", "Fırat", "Tuna"], answer: 1 },
-  { id: 6, category: "Tarih", question: "İstanbul kaç yılında fethedilmiştir?", options: ["1071", "1299", "1453", "1923"], answer: 2 },
-  { id: 7, category: "Coğrafya", question: "Yüzölçümü en büyük kıta hangisidir?", options: ["Afrika", "Avrupa", "Asya", "Amerika"], answer: 2 },
-  { id: 8, category: "Sanat", question: "Mona Lisa tablosu kime aittir?", options: ["Pablo Picasso", "Leonardo da Vinci", "Vincent van Gogh", "Salvador Dalí"], answer: 1 },
-  { id: 9, category: "Bilim", question: "İnsan vücudundaki en büyük organ hangisidir?", options: ["Karaciğer", "Beyin", "Kalp", "Deri"], answer: 3 },
-  { id: 10, category: "Spor", question: "Olimpiyat halkalarında kaç renk bulunur?", options: ["4", "5", "6", "7"], answer: 1 },
-  { id: 11, category: "Coğrafya", question: "Türkiye'nin en yüksek dağı hangisidir?", options: ["Erciyes Dağı", "Süphan Dağı", "Ağrı Dağı", "Kaçkar Dağı"], answer: 2 },
-  { id: 12, category: "Edebiyat", question: "Türk edebiyatının ilk yazılı belgesi hangisidir?", options: ["Dede Korkut", "Orhun Yazıtları", "Kutadgu Bilig", "Divan-ı Lugat-it Türk"], answer: 1 },
-  { id: 13, category: "Bilim", question: "Suyun kimyasal formülü nedir?", options: ["CO2", "H2O", "O2", "NaCl"], answer: 1 },
-  { id: 14, category: "Tarih", question: "Gazi Mustafa Kemal Atatürk hangi şehirde doğmuştur?", options: ["Ankara", "İstanbul", "Selanik", "Manastır"], answer: 2 },
-  { id: 15, category: "Genel Kültür", question: "Pusulanın ana yönü N harfi ile gösterilen hangisidir?", options: ["Güney", "Kuzey", "Doğu", "Batı"], answer: 1 }
+  // Genel Kültür (5 Soru)
+  { id: 1, category: "Genel Kültür", question: "Dünyanın en uzun nehri hangisidir?", options: ["Amazon", "Nil", "Fırat", "Tuna"], answer: 1 },
+  { id: 2, category: "Genel Kültür", question: "İstiklal Marşı'mızın şairi kimdir?", options: ["Mehmet Âkif Ersoy", "Yahya Kemal", "Ziya Gökalp", "Namık Kemal"], answer: 0 },
+  { id: 3, category: "Genel Kültür", question: "Mona Lisa tablosu kime aittir?", options: ["Pablo Picasso", "Leonardo da Vinci", "Vincent van Gogh", "Salvador Dalí"], answer: 1 },
+  { id: 4, category: "Genel Kültür", question: "Pusulanın ana yönü N harfi ile gösterilen hangisidir?", options: ["Güney", "Kuzey", "Doğu", "Batı"], answer: 1 },
+  { id: 5, category: "Genel Kültür", question: "Olimpiyat halkalarında kaç renk bulunur?", options: ["4", "5", "6", "7"], answer: 1 },
+
+  // Dünya (5 Soru)
+  { id: 6, category: "Dünya", question: "Yüzölçümü bakımından dünyanın en büyük ülkesi hangisidir?", options: ["Çin", "Kanada", "ABD", "Rusya"], answer: 3 },
+  { id: 7, category: "Dünya", question: "Dünyanın en büyük okyanusu hangisidir?", options: ["Atlas Okyanusu", "Hint Okyanusu", "Büyük Okyanus (Pasifik)", "Arktik Okyanusu"], answer: 2 },
+  { id: 8, category: "Dünya", question: "Yüzölçümü en büyük kıta hangisidir?", options: ["Afrika", "Avrupa", "Asya", "Amerika"], answer: 2 },
+  { id: 9, category: "Dünya", question: "İtalya'nın başkenti neresidir?", options: ["Milano", "Venedik", "Roma", "Napoli"], answer: 2 },
+  { id: 10, category: "Dünya", question: "Eyfel Kulesi hangi şehirde yer alır?", options: ["Londra", "Paris", "Berlin", "Madrid"], answer: 1 },
+
+  // Güncel Bilgi (5 Soru)
+  { id: 11, category: "Güncel Bilgi", question: "Türkiye'nin ilk yerli ve millî otomobil markası hangisidir?", options: ["Devrim", "TOGG", "Anadol", "Şahin"], answer: 1 },
+  { id: 12, category: "Güncel Bilgi", question: "Uzaya giden ilk Türk astronot kimdir?", options: ["Alper Gezeravcı", "Tuva Cihangir Atasever", "Umut Yıldız", "Ali Kuşçu"], answer: 0 },
+  { id: 13, category: "Güncel Bilgi", question: "EURO 2024 Avrupa Futbol Şampiyonası hangi ülkede düzenlenmiştir?", options: ["Fransa", "İngiltere", "Almanya", "İspanya"], answer: 2 },
+  { id: 14, category: "Güncel Bilgi", question: "Birleşmiş Milletler (BM) Genel Merkezi hangi şehirdedir?", options: ["Cenevre", "New York", "Brüksel", "Pekin"], answer: 1 },
+  { id: 15, category: "Güncel Bilgi", question: "Türkiye'nin ilk insansız savaş uçağı projesinin adı nedir?", options: ["BAYRAKTAR TB2", "ANKA", "KAAN", "KIZILELMA"], answer: 3 },
+
+  // İngilizce Bilmece (5 Soru)
+  { id: 16, category: "İngilizce Bilmece", question: "I have hands, but I cannot clap. What am I?", options: ["A clock", "A chair", "A tree", "A book"], answer: 0 },
+  { id: 17, category: "İngilizce Bilmece", question: "What has to be broken before you can use it?", options: ["A glass", "An egg", "A phone", "A door"], answer: 1 },
+  { id: 18, category: "İngilizce Bilmece", question: "I speak without a mouth and hear without ears. What am I?", options: ["An echo", "A shadow", "A cloud", "A wind"], answer: 0 },
+  { id: 19, category: "İngilizce Bilmece", question: "What goes up but never comes down?", options: ["A balloon", "Your age", "A plane", "The rain"], answer: 1 },
+  { id: 20, category: "İngilizce Bilmece", question: "What has many keys but can't open a single lock?", options: ["A map", "A piano", "A box", "A house"], answer: 1 },
+
+  // Uzay ve Evren (5 Soru)
+  { id: 21, category: "Uzay ve Evren", question: "Güneş Sistemimizdeki en büyük gezegen hangisidir?", options: ["Mars", "Venüs", "Jüpiter", "Satürn"], answer: 2 },
+  { id: 22, category: "Uzay ve Evren", question: "Halkalarıyla ünlü olan gezegen hangisidir?", options: ["Satürn", "Uranüs", "Neptün", "Mars"], answer: 0 },
+  { id: 23, category: "Uzay ve Evren", question: "'Kızıl Gezegen' olarak bilinen gezegen hangisidir?", options: ["Venüs", "Mars", "Merkür", "Jüpiter"], answer: 1 },
+  { id: 24, category: "Uzay ve Evren", question: "Dünya'nın tek doğal uydusu nedir?", options: ["Güneş", "Titan", "Ay", "Phobos"], answer: 2 },
+  { id: 25, category: "Uzay ve Evren", question: "Güneş'e en yakın gezegen hangisidir?", options: ["Merkür", "Venüs", "Dünya", "Mars"], answer: 0 },
+
+  // Matematik (5 Soru)
+  { id: 26, category: "Matematik", question: "Bir dik üçgende en uzun kenara ne ad verilir?", options: ["Dik kenar", "Taban", "Hipotenüs", "Yükseklik"], answer: 2 },
+  { id: 27, category: "Matematik", question: "En küçük asal sayı kaçtır?", options: ["0", "1", "2", "3"], answer: 2 },
+  { id: 28, category: "Matematik", question: "Çemberin çevresini bulmak için kullanılan sabit sayı hangisidir?", options: ["Altın Oran", "Pi Sayısı", "Euler Sayısı", "Kök 2"], answer: 1 },
+  { id: 29, category: "Matematik", question: "İç açıları toplamı 180 derece olan geometrik şekil hangisidir?", options: ["Kare", "Dikdörtgen", "Üçgen", "Beşgen"], answer: 2 },
+  { id: 30, category: "Matematik", question: "8'in küpü (8³) kaçtır?", options: ["64", "256", "512", "1024"], answer: 2 },
+
+  // Eskişehir (5 Soru)
+  { id: 31, category: "Eskişehir", question: "Eskişehir içinden geçen ve şehre hayat veren ünlü nehir hangisidir?", options: ["Kızılırmak", "Yeşilırmak", "Porsuk Çayı", "Sakarya Nehrı"], answer: 2 },
+  { id: 32, category: "Eskişehir", question: "Eskişehir ile özdeşleşen, beyaz renkli ve işlemesiyle ünlü değerli taş hangisidir?", options: ["Oltu Taşı", "Lüle Taşı", "Kehribar", "Zümrüt"], answer: 1 },
+  { id: 33, category: "Eskişehir", question: "Eskişehir'in tarihi evleriyle ünlü turistik semti neresidir?", options: ["Odunpazarı", "Tepebaşı", "Bağlar", "İnönü"], answer: 0 },
+  { id: 34, category: "Eskişehir", question: "Eskişehir'e özgü olan, kıymalı harçla yapılıp yağda kızartılan ünlü lezzet hangisidir?", options: ["Mantı", "Çibörek", "Gözleme", "Pide"], answer: 1 },
+  { id: 35, category: "Eskişehir", question: "1961 yılında Eskişehir Demiryolu Fabrikası'nda üretilen ilk Türk otomobili hangisidir?", options: ["Devrim", "Anadol", "Murat 124", "Toros"], answer: 0 }
 ];
 
 let currentRoomCode = null;
