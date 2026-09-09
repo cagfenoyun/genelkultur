@@ -215,7 +215,7 @@
     flex:1; min-height:0; display:flex; flex-direction:column; justify-content:center;
     background:linear-gradient(180deg, rgba(21,54,98,0.55), rgba(15,39,74,0.68));
     border:1px solid rgba(255,255,255,0.08);
-    border-radius:22px; padding:28px 34px;
+    border-radius:22px; padding:28px 34px; position:relative;
   }
   .q-text{
     font-family:'Baloo 2',sans-serif; font-weight:700;
@@ -243,6 +243,15 @@
   .status-line{
     text-align:center; margin-top:16px; font-weight:800; color:var(--gray-300); font-size:14px; min-height:18px;
   }
+
+  .last-questions-banner{
+    position:absolute; top:-20px; left:50%; transform:translateX(-50%);
+    background:linear-gradient(90deg, #E8542A, #F2B705);
+    color:var(--navy-900); font-family:'Baloo 2',sans-serif; font-weight:800; font-size:16px;
+    padding:6px 20px; border-radius:20px; box-shadow:0 6px 16px rgba(232,84,42,0.4);
+    display:none; animation:pulse 1s infinite alternate;
+  }
+  @keyframes pulse { from { transform:translateX(-50%) scale(1); } to { transform:translateX(-50%) scale(1.05); } }
 
   #screen-result .result-trophy{font-size:70px; margin-bottom:6px;}
   .result-line{
@@ -358,7 +367,7 @@
 
       <div class="center-col">
         <div class="meta-row">
-          <div class="q-progress" id="q-progress">Soru 1/15</div>
+          <div class="q-progress" id="q-progress">Soru 1/50</div>
           <div class="q-category" id="q-category">Genel Kültür</div>
           <div class="timer-wrap">
             <svg width="64" height="64" viewBox="0 0 64 64">
@@ -369,6 +378,7 @@
           </div>
         </div>
         <div class="question-card" id="question-card">
+          <div class="last-questions-banner" id="last-q-banner">⚠️ DİKKAT: SON 3 SORU!</div>
           <div class="q-text" id="q-text">Soru yükleniyor...</div>
           <div class="options-grid" id="options-grid"></div>
           <div class="status-line" id="game-status-line"></div>
@@ -425,6 +435,7 @@ if (!firebase.apps.length) {
 const db = firebase.database();
 
 const QUESTION_BANK = [
+  // MEVCUT 15 SORU
   { id: 1, category: "Tarih", question: "Türkiye Cumhuriyeti hangi yılda kurulmuştur?", options: ["1920", "1921", "1922", "1923"], answer: 3 },
   { id: 2, category: "Coğrafya", question: "Türkiye'nin başkenti neresidir?", options: ["İstanbul", "Ankara", "İzmir", "Bursa"], answer: 1 },
   { id: 3, category: "Bilim", question: "Güneş Sistemimizdeki en büyük gezegen hangisidir?", options: ["Mars", "Venüs", "Jüpiter", "Satürn"], answer: 2 },
@@ -439,7 +450,59 @@ const QUESTION_BANK = [
   { id: 12, category: "Edebiyat", question: "Türk edebiyatının ilk yazılı belgesi hangisidir?", options: ["Dede Korkut", "Orhun Yazıtları", "Kutadgu Bilig", "Divan-ı Lugat-it Türk"], answer: 1 },
   { id: 13, category: "Bilim", question: "Suyun kimyasal formülü nedir?", options: ["CO2", "H2O", "O2", "NaCl"], answer: 1 },
   { id: 14, category: "Tarih", question: "Gazi Mustafa Kemal Atatürk hangi şehirde doğmuştur?", options: ["Ankara", "İstanbul", "Selanik", "Manastır"], answer: 2 },
-  { id: 15, category: "Genel Kültür", question: "Pusulanın ana yönü N harfi ile gösterilen hangisidir?", options: ["Güney", "Kuzey", "Doğu", "Batı"], answer: 1 }
+  { id: 15, category: "Genel Kültür", question: "Pusulanın ana yönü N harfi ile gösterilen hangisidir?", options: ["Güney", "Kuzey", "Doğu", "Batı"], answer: 1 },
+
+  // 10 MATEMATİK SORUSU
+  { id: 16, category: "Matematik", question: "Bir dik üçgende 90 derecelik açının karşısındaki kenara ne ad verilir?", options: ["Hipotenüs", "Taban", "Yükseklik", "Çap"], answer: 0 },
+  { id: 17, category: "Matematik", question: "En küçük asal sayı kaçtır?", options: ["0", "1", "2", "3"], answer: 2 },
+  { id: 18, category: "Matematik", question: "Bir çemberin çevresinin çapına oranı hangi sabit sayıyı verir?", options: ["E sayısı", "Pi sayısı", "Altın oran", "Fi sayısı"], answer: 1 },
+  { id: 19, category: "Matematik", question: "7'nin karesi (7²) kaçtır?", options: ["14", "28", "42", "49"], answer: 3 },
+  { id: 20, category: "Matematik", question: "İç açıları toplamı 180 derece olan geometrik şekil hangisidir?", options: ["Kare", "Üçgen", "Beşgen", "Dikdörtgen"], answer: 1 },
+  { id: 21, category: "Matematik", question: "Bir saatte kaç saniye vardır?", options: ["60", "360", "1800", "3600"], answer: 3 },
+  { id: 22, category: "Matematik", question: "Kök 64 (√64) kaça eşittir?", options: ["6", "7", "8", "9"], answer: 2 },
+  { id: 23, category: "Matematik", question: "0.5 kesrinin yüzde olarak karşılığı nedir?", options: ["%5", "%20", "%50", "%500"], answer: 2 },
+  { id: 24, category: "Matematik", question: "Bir küpün kaç yüzü (yüzeyi) vardır?", options: ["4", "6", "8", "12"], answer: 1 },
+  { id: 25, category: "Matematik", question: "Negatif iki sayının çarpımının sonucu nedir?", options: ["Negatif", "Pozitif", "Sıfır", "Tanımsız"], answer: 1 },
+
+  // 10 İNGİLİZCE (KOMİK BİLMECE) SORUSU
+  { id: 26, category: "İngilizce Bilmece", question: "Why is 6 afraid of 7? (6 neden 7'den korkar?)", options: ["Because 7 8(ate) 9", "Because 7 is bigger", "Because 7 is stronger", "Because 7 is monster"], answer: 0 },
+  { id: 27, category: "İngilizce Bilmece", question: "What has hands, but cannot clap? (Elleri var ama alkışlayamaz?)", options: ["A clock (Saat)", "A dog", "A robot", "A chair"], answer: 0 },
+  { id: 28, category: "İngilizce Bilmece", question: "What has to be broken before you can use it? (Kullanmadan önce kırılması gereken şey nedir?)", options: ["An egg (Yumurta)", "A glass", "A phone", "A nut"], answer: 0 },
+  { id: 29, category: "İngilizce Bilmece", question: "What building has the most stories? (En çok hikayesi/katı olan bina hangisidir?)", options: ["Library (Kütüphane)", "Hospital", "School", "Hotel"], answer: 0 },
+  { id: 30, category: "İngilizce Bilmece", question: "Why do cows wear bells? (İnekler neden çan takar?)", options: ["Because their horns don't work", "To look cool", "For music", "To run fast"], answer: 0 },
+  { id: 31, category: "İngilizce Bilmece", question: "What stays in the corner, but travels around the world? (Köşede durup dünyayı gezen nedir?)", options: ["A stamp (Pul)", "A spider", "A bird", "A plane"], answer: 0 },
+  { id: 32, category: "İngilizce Bilmece", question: "What is orange and sounds like a parrot? (Turuncudur ve papağan gibi ses çıkarır?)", options: ["A carrot (Havuç)", "An orange", "A tiger", "A pumpkin"], answer: 0 },
+  { id: 33, category: "İngilizce Bilmece", question: "Why did the computer go to the doctor? (Bilgisayar neden doktora gitti?)", options: ["Because it had a virus", "It was tired", "Screen was black", "Keyboard was broken"], answer: 0 },
+  { id: 34, category: "İngilizce Bilmece", question: "What goes up but never comes down? (Sürekli yükselen ama hiç inmeyen şey nedir?)", options: ["Your age (Yaşın)", "A balloon", "A rocket", "A bird"], answer: 0 },
+  { id: 35, category: "İngilizce Bilmece", question: "Why did the math book look sad? (Matematik kitabı neden üzgündü?)", options: ["Too many problems", "It was old", "No pictures", "Nobody read it"], answer: 0 },
+
+  // 5 ESKİŞEHİR SORUSU
+  { id: 36, category: "Eskişehir", question: "Eskişehir'de yer altına çıkarılan ve 'Beyaz Altın' olarak bilinen dünyaca ünlü taş hangisidir?", options: ["Lüle Taşı", "Oltu Taşı", "Mermer", "Kuvars"], answer: 0 },
+  { id: 37, category: "Eskişehir", question: "Eskişehir'in ortasından geçen ve şehre güzellik katan ünlü nehir hangisidir?", options: ["Porsuk Çayı", "Sakarya Nehri", "Kızılırmak", "Yeşilırmak"], answer: 0 },
+  { id: 38, category: "Eskişehir", question: "Eskişehir'e özgü, kıymalı harç ile yapılıp derin yağda kızartılan meşhur börek hangisidir?", options: ["Çibörek", "Su Böreği", "Kuru Börek", "Boyoz"], answer: 0 },
+  { id: 39, category: "Eskişehir", question: "Türkiye'nin yerli imkanlarla üretilen ilk otomobili Devrim, Eskişehir'deki hangi tesiste üretilmiştir?", options: ["TÜRASAŞ (TÜLOMSAŞ)", "TUSAŞ", "Arçelik", "Eskişehir Şeker Fabrikası"], answer: 0 },
+  { id: 40, category: "Eskişehir", question: "Eskişehir'in tarihi evleriyle ünlü, UNESCO Dünya Mirası Geçici Listesi'nde yer alan ilçesi hangisidir?", options: ["Odunpazarı", "Tepebaşı", "Sivrihisar", "Seyitgazi"], answer: 0 },
+
+  // 5 UZAY SORUSU
+  { id: 41, category: "Uzay", question: "Kızıl Gezegen olarak bilinen komşu gezegenimiz hangisidir?", options: ["Mars", "Venüs", "Merkür", "Jüpiter"], answer: 0 },
+  { id: 42, category: "Uzay", question: "Türkiye'nin ilk astronotu kimdir?", options: ["Alper Gezeravcı", "Tuva Cihangir Atasever", "Umut Yıldız", "Gökhan Erdem"], answer: 0 },
+  { id: 43, category: "Uzay", question: "Dünya'ya en yakın yıldız hangisidir?", options: ["Güneş", "Sirius", "Proxima Centauri", "Kutup Yıldızı"], answer: 0 },
+  { id: 44, category: "Uzay", question: "Uzayda yerçekimsiz ortamda astronotların yaşadığı ve araştırmalar yaptığı dev istasyon hangisidir?", options: ["Uluslararası Uzay İstasyonu (ISS)", "Hubble", "James Webb", "Apollo 11"], answer: 0 },
+  { id: 45, category: "Uzay", question: "Işığı bile kaçırmayacak kadar güçlü bir çekim alanına sahip uzay cisimlerine ne ad verilir?", options: ["Kara Delik", "Nötron Yıldızı", "Kuyruklu Yıldız", "Meteor"], answer: 0 },
+
+  // 5 DÜNYA SORUSU
+  { id: 46, category: "Dünya Coğrafyası", question: "Dünyanın en derin noktası olan çukur hangisidir?", options: ["Mariana Çukuru", "Bermuda Şeytan Üçgeni", "Kore Çukuru", "Java Çukuru"], answer: 0 },
+  { id: 47, category: "Dünya Coğrafyası", question: "Dünyanın en geniş yüzölçümüne sahip ülkesi hangisidir?", options: ["Rusya", "Çin", "ABD", "Kanada"], answer: 0 },
+  { id: 48, category: "Dünya Coğrafyası", question: "Dünyanın en büyük okyanusu hangisidir?", options: ["Büyük Okyanus (Pasifik)", "Atlas Okyanusu", "Hint Okyanusu", "Kutup Okyanusu"], answer: 0 },
+  { id: 49, category: "Dünya Coğrafyası", question: "Dünyanın 'Çatısı' olarak adlandırılan devasa dağ sırası hangisidir?", options: ["Himalayalar", "Alpler", "And Dağları", "Kayalık Dağlar"], answer: 0 },
+  { id: 50, category: "Dünya Coğrafyası", question: "Dünyanın en sıcak ve en büyük sıcak çölü hangisidir?", options: ["Sahra Çölü", "Gobi Çölü", "Atakama Çölü", "Kalahari Çölü"], answer: 0 },
+
+  // 5 GÜNCEL BİLGİ SORUSU
+  { id: 51, category: "Güncel Bilgi", question: "2024 Paris Olimpiyat Oyunları'nda gümüş madalya kazanan ve kulaksız/gözlüksüz atış tarzıyla dünya çapında fenomen olan milli atıcımız kimdir?", options: ["Yusuf Dikeç", "Mete Gazoz", "Taha Akgül", "Rıza Kayaalp"], answer: 0 },
+  { id: 52, category: "Güncel Bilgi", question: "Türk Havacılık ve Uzay Sanayii (TUSAŞ) tarafından geliştirilen Türkiye'nin ilk milli muharip uçağının adı nedir?", options: ["KAAN", "HÜRJET", "ANKA", "BAYRAKTAR KIZILELMA"], answer: 0 },
+  { id: 53, category: "Güncel Bilgi", question: "TOGG yerli otomobilimizin ilk üretilen SUV modelinin adı nedir?", options: ["T10X", "T8X", "V10X", "C10X"], answer: 0 },
+  { id: 54, category: "Güncel Bilgi", question: "2023 yılında UNESCO Dünya Mirası Listesi'ne alınan Ankara'daki antik kent hangisidir?", options: ["Gordion", "Ephesos", "Zeugma", "Hattuşaş"], answer: 0 },
+  { id: 55, category: "Güncel Bilgi", question: "Dünyanın en yüksek binası olan Burj Khalifa hangi şehirdedir?", options: ["Dubai", "Katar", "Riyad", "Abu Dabi"], answer: 0 }
 ];
 
 let currentRoomCode = null;
@@ -682,6 +745,14 @@ function renderQuestion(qIndex, data) {
     document.getElementById('q-category').textContent = question.category;
     document.getElementById('q-text').textContent = question.question;
     document.getElementById('game-status-line').textContent = "";
+
+    // Son 3 Soru Uyarısı Kontrolü
+    const lastQBanner = document.getElementById('last-q-banner');
+    if(qIndex >= QUESTION_BANK.length - 3) {
+      lastQBanner.style.display = 'block';
+    } else {
+      lastQBanner.style.display = 'none';
+    }
 
     const grid = document.getElementById('options-grid');
     grid.innerHTML = "";
