@@ -1,794 +1,883 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ÇFK Genel Kültür Yarışması</title>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- Firebase SDK (Compat v10.8.0) -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ÇFK Genel Kültür Yarışması</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-900:#0A1B33;
+    --navy-800:#0F274A;
+    --navy-700:#153662;
+    --navy-600:#1C4A85;
+    --orange:#E8542A;
+    --orange-dark:#B93A18;
+    --gold:#F2B705;
+    --white:#FFFFFF;
+    --gray-300:#B9C4D6;
+    --gray-500:#7C8AA3;
+    --green:#2FAE60;
+    --red:#D64541;
+    --shadow-strong: 0 18px 40px rgba(4,12,26,0.55);
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;padding:0;height:100%;
+    font-family:'Nunito',sans-serif;
+    color:var(--white);
+    background:
+      radial-gradient(circle at 18% 12%, rgba(232,84,42,0.16), transparent 42%),
+      radial-gradient(circle at 82% 78%, rgba(28,74,133,0.35), transparent 45%),
+      linear-gradient(160deg, var(--navy-900) 0%, #081327 100%);
+    overflow:hidden;
+    -webkit-user-select:none;
+    user-select:none;
+  }
+  #app{position:relative; width:100vw; height:100vh; display:flex; flex-direction:column;}
 
-    <style>
-        :root {
-            --bg-primary: #0f172a;
-            --bg-card: #1e293b;
-            --accent: #f59e0b;
-            --accent-hover: #d97706;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --correct: #10b981;
-            --wrong: #ef4444;
-            --blue: #3b82f6;
-            --purple: #8b5cf6;
-            --pink: #ec4899;
-        }
+  /* ---------- Header ---------- */
+  #topbar{
+    display:flex; align-items:center; gap:16px;
+    padding:14px 28px;
+    background:linear-gradient(180deg, rgba(10,27,51,0.9), rgba(10,27,51,0.0));
+    position:relative; z-index:20;
+    flex-shrink:0;
+  }
+  #topbar img{
+    height:56px; width:auto;
+    filter:drop-shadow(0 6px 14px rgba(0,0,0,0.5));
+  }
+  #topbar .brand-text{display:flex; flex-direction:column; line-height:1.05;}
+  #topbar .brand-text .club{
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:22px;
+    letter-spacing:0.5px; color:var(--white);
+  }
+  #topbar .brand-text .sub{
+    font-size:13px; color:var(--gray-300); font-weight:700;
+  }
+  #topbar .spacer{flex:1;}
+  #room-badge{
+    display:none;
+    align-items:center; gap:10px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.14);
+    padding:8px 16px; border-radius:14px;
+    font-family:'Baloo 2',sans-serif; font-size:15px; font-weight:700;
+    color:var(--gray-300);
+  }
+  #room-badge b{color:var(--gold); letter-spacing:3px; font-size:17px;}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Nunito', sans-serif;
-            user-select: none;
-        }
+  /* ---------- Screen management ---------- */
+  .screen{
+    display:none; flex:1; min-height:0;
+    flex-direction:column; align-items:center; justify-content:center;
+    padding:20px 32px 36px;
+    position:relative;
+  }
+  .screen.active{display:flex;}
 
-        body {
-            background-color: var(--bg-primary);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            overflow-x: hidden;
-        }
+  /* ---------- Shared card ---------- */
+  .card{
+    background:linear-gradient(180deg, rgba(21,54,98,0.75), rgba(15,39,74,0.85));
+    border:1px solid rgba(255,255,255,0.08);
+    border-top:5px solid var(--orange);
+    border-radius:22px;
+    box-shadow:var(--shadow-strong);
+    padding:38px 44px;
+  }
+  h1.title{
+    font-family:'Baloo 2',sans-serif; font-weight:800;
+    font-size:clamp(30px,4vw,46px);
+    margin:0 0 6px;
+    text-align:center;
+  }
+  p.lead{
+    color:var(--gray-300); font-weight:700; text-align:center;
+    margin:0 0 30px; font-size:17px;
+  }
 
-        .container {
-            width: 100%;
-            max-width: 950px;
-            background: var(--bg-card);
-            border-radius: 24px;
-            padding: 32px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-        }
+  /* Hero icon */
+  #home-logo-placeholder{
+    display:flex; align-items:center; justify-content:center;
+    margin:0 auto 18px; height:100px; width:100px;
+    border-radius:50%; background:rgba(232,84,42,0.2);
+    border:3px solid var(--orange);
+    font-size:48px;
+    filter:drop-shadow(0 14px 26px rgba(0,0,0,0.55));
+    animation: logoSpin 6s linear infinite;
+  }
+  @keyframes logoSpin{
+    from{ transform:rotateY(0deg); }
+    to{ transform:rotateY(360deg); }
+  }
 
-        h1, h2, h3, .score-val {
-            font-family: 'Baloo 2', cursive;
-        }
+  .btn{
+    font-family:'Baloo 2',sans-serif; font-weight:700; font-size:19px;
+    border:none; border-radius:16px; cursor:pointer;
+    padding:16px 30px;
+    color:var(--white);
+    transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .btn:active{transform:scale(0.96);}
+  .btn-primary{
+    background:linear-gradient(180deg, var(--orange), var(--orange-dark));
+    box-shadow:0 10px 22px rgba(232,84,42,0.35);
+  }
+  .btn-primary:hover{filter:brightness(1.08);}
+  .btn-secondary{
+    background:rgba(255,255,255,0.08);
+    border:2px solid rgba(255,255,255,0.18);
+  }
+  .btn-secondary:hover{background:rgba(255,255,255,0.14);}
+  .btn:disabled{opacity:0.45; cursor:not-allowed; filter:none; transform:none;}
+  .btn-block{width:100%;}
 
-        .screen {
-            display: none;
-            animation: fadeIn 0.4s ease-in-out forwards;
-        }
+  /* ---------- Home screen ---------- */
+  #screen-home .choice-row{
+    display:flex; gap:22px; margin-top:6px; flex-wrap:wrap; justify-content:center;
+  }
+  .choice-card{
+    width:230px; padding:28px 20px; border-radius:20px; cursor:pointer;
+    background:rgba(255,255,255,0.05);
+    border:2px solid rgba(255,255,255,0.1);
+    text-align:center; transition:.15s ease;
+  }
+  .choice-card:hover{border-color:var(--orange); background:rgba(232,84,42,0.1); transform:translateY(-3px);}
+  .choice-card .emoji{font-size:40px; display:block; margin-bottom:10px;}
+  .choice-card .ct{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:19px;}
+  .choice-card .cs{color:var(--gray-300); font-size:13px; font-weight:600; margin-top:4px;}
 
-        .screen.active {
-            display: block;
-        }
+  .form-panel{margin-top:26px; width:100%; max-width:380px; display:none; flex-direction:column; gap:14px;}
+  .form-panel.active{display:flex;}
+  .field label{display:block; font-size:13px; font-weight:800; color:var(--gray-300); margin-bottom:6px; letter-spacing:0.3px;}
+  .field input{
+    width:100%; padding:14px 16px; border-radius:12px; border:2px solid rgba(255,255,255,0.14);
+    background:rgba(6,16,32,0.5); color:var(--white); font-size:18px; font-weight:700;
+    font-family:'Nunito',sans-serif;
+  }
+  .field input:focus{outline:none; border-color:var(--orange);}
+  .field input.code-input{letter-spacing:10px; text-align:center; font-family:'Baloo 2',sans-serif; font-size:26px;}
+  .error-msg{
+    color:#FFD3CB; background:rgba(214,69,65,0.22); border:1px solid rgba(214,69,65,0.5);
+    padding:10px 14px; border-radius:10px; font-weight:700; font-size:14px; display:none;
+  }
+  .back-link{
+    margin-top:8px; background:none; border:none; color:var(--gray-300);
+    font-weight:700; cursor:pointer; font-size:14px; text-decoration:underline;
+  }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+  /* ---------- Lobby ---------- */
+  #screen-lobby .lobby-code{
+    text-align:center; margin-bottom:26px;
+  }
+  #screen-lobby .lobby-code .cap{font-size:13px; letter-spacing:2px; color:var(--gray-300); font-weight:800;}
+  #screen-lobby .lobby-code .val{
+    font-family:'Baloo 2',sans-serif; font-size:52px; font-weight:800; color:var(--gold);
+    letter-spacing:14px; margin-top:2px;
+  }
+  .lobby-teams{display:flex; align-items:center; gap:14px; justify-content:center; flex-wrap:wrap;}
+  .team-slot{
+    width:190px; min-height:150px; border-radius:18px; padding:18px 14px;
+    background:rgba(255,255,255,0.05); border:2px solid rgba(255,255,255,0.1);
+    text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+  }
+  .team-slot.me{border-color:var(--orange);}
+  .team-slot.empty{border-style:dashed; opacity:0.55;}
+  .team-slot .tname{font-family:'Baloo 2',sans-serif; font-size:18px; font-weight:700; word-break:break-word;}
+  .team-slot .tstatus{font-size:12px; font-weight:800; padding:5px 12px; border-radius:20px;}
+  .tstatus.waiting{background:rgba(124,138,163,0.25); color:var(--gray-300);}
+  .tstatus.ready{background:rgba(47,174,96,0.22); color:#7CE3A6;}
+  .vs-badge{
+    font-family:'Baloo 2',sans-serif; font-size:22px; font-weight:800; color:var(--gray-500);
+  }
+  #lobby-ready-btn{margin-top:28px;}
+  .countdown-overlay{
+    position:absolute; inset:0; display:none; align-items:center; justify-content:center;
+    background:rgba(6,14,28,0.72); z-index:30; flex-direction:column; gap:8px; border-radius:22px;
+  }
+  .countdown-overlay.active{display:flex;}
+  .countdown-num{
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:120px; color:var(--orange);
+    text-shadow:0 12px 30px rgba(0,0,0,0.6);
+  }
+  .countdown-label{font-weight:800; color:var(--gray-300); letter-spacing:2px; font-size:16px;}
 
-        /* Başlık & Logo */
-        .header-logo {
-            text-align: center;
-            margin-bottom: 24px;
-        }
+  /* ---------- Game screen ---------- */
+  #screen-game{padding:14px 24px 22px; justify-content:flex-start;}
+  .game-layout{
+    width:100%; height:100%; display:flex; flex-direction:column; gap:16px; min-height:0;
+  }
+  .score-row{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; flex-shrink:0;
+  }
+  .score-panel{
+    border-radius:18px; padding:14px 18px; display:flex; align-items:center; justify-content:space-between;
+    gap:10px; text-align:left;
+    background:linear-gradient(180deg, rgba(21,54,98,0.65), rgba(15,39,74,0.75));
+    border:1px solid rgba(255,255,255,0.08);
+  }
+  .score-panel.mine{border-bottom:4px solid var(--orange);}
+  .score-panel.rival{border-bottom:4px solid var(--navy-600);}
+  .score-panel .sp-info{display:flex; flex-direction:column; gap:2px; min-width:0;}
+  .score-panel .sp-cap{font-size:11px; font-weight:800; letter-spacing:1.5px; color:var(--gray-300);}
+  .score-panel .sp-name{font-family:'Baloo 2',sans-serif; font-size:16px; font-weight:700; word-break:break-word;}
+  .score-panel .sp-score{font-family:'Baloo 2',sans-serif; font-size:38px; font-weight:800; line-height:1; flex-shrink:0;}
 
-        .header-logo h1 {
-            font-size: 2.8rem;
-            color: var(--accent);
-            text-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
-            letter-spacing: 1px;
-        }
+  .center-col{display:flex; flex-direction:column; gap:14px; min-height:0; flex:1;}
+  .meta-row{display:flex; align-items:center; justify-content:space-between; padding:0 6px;}
+  .q-progress{font-weight:800; color:var(--gray-300); font-size:14px;}
+  .q-category{
+    font-family:'Baloo 2',sans-serif; font-weight:700; font-size:14px;
+    background:rgba(232,84,42,0.18); color:#FFB79C; padding:6px 16px; border-radius:20px;
+    border:1px solid rgba(232,84,42,0.4);
+  }
+  .timer-wrap{position:relative; width:64px; height:64px;}
+  .timer-wrap svg{transform:rotate(-90deg);}
+  .timer-wrap .ring-bg{fill:none; stroke:rgba(255,255,255,0.12); stroke-width:6;}
+  .timer-wrap .ring-fg{fill:none; stroke:var(--gold); stroke-width:6; stroke-dasharray: 169.64; stroke-dashoffset: 0; stroke-linecap:round; transition:stroke-dashoffset .1s linear, stroke .2s ease;}
+  .timer-wrap .ring-fg.warn{stroke:var(--red);}
+  .timer-wrap .tnum{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:20px;
+  }
 
-        /* Giriş Ekranı Izgarası */
-        .panel-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-top: 16px;
-        }
+  .question-card{
+    flex:1; min-height:0; display:flex; flex-direction:column; justify-content:center;
+    background:linear-gradient(180deg, rgba(21,54,98,0.55), rgba(15,39,74,0.68));
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:22px; padding:28px 34px;
+    animation:qIn .38s ease;
+  }
+  @keyframes qIn{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+  .q-text{
+    font-family:'Baloo 2',sans-serif; font-weight:700;
+    font-size:clamp(22px,2.4vw,32px); text-align:center; line-height:1.3;
+    margin-bottom:26px;
+  }
+  .options-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:16px;
+  }
+  .opt-btn{
+    display:flex; align-items:center; gap:14px;
+    background:rgba(255,255,255,0.06);
+    border:2px solid rgba(255,255,255,0.14);
+    border-radius:16px; padding:16px 18px; cursor:pointer;
+    text-align:left; transition:.12s ease;
+  }
+  .opt-btn:hover:not(:disabled){border-color:var(--orange); background:rgba(232,84,42,0.12);}
+  .opt-btn:disabled{cursor:default;}
+  .opt-badge{
+    flex-shrink:0; width:34px; height:34px; border-radius:10px;
+    background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center;
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:16px;
+  }
+  .opt-text{font-size:17px; font-weight:700; color:var(--white);}
+  .opt-btn.picked-mine{border-color:var(--gold); background:rgba(242,183,5,0.14);}
+  .opt-btn.picked-mine .opt-badge{background:var(--gold); color:var(--navy-900);}
+  .opt-btn.reveal-correct{border-color:var(--green); background:rgba(47,174,96,0.2);}
+  .opt-btn.reveal-correct .opt-badge{background:var(--green); color:var(--white);}
+  .opt-btn.reveal-wrong-mine{border-color:var(--red); background:rgba(214,69,65,0.18);}
+  .status-line{
+    text-align:center; margin-top:16px; font-weight:800; color:var(--gray-300); font-size:14px; min-height:18px;
+  }
 
-        @media (max-width: 768px) {
-            .panel-grid { grid-template-columns: 1fr; }
-            .container { padding: 20px; }
-        }
+  /* ---------- Result ---------- */
+  #screen-result .result-trophy{font-size:70px; margin-bottom:6px; animation:bounce .9s ease;}
+  @keyframes bounce{
+    0%{transform:translateY(-30px) scale(0.7); opacity:0;}
+    60%{transform:translateY(6px) scale(1.05); opacity:1;}
+    100%{transform:translateY(0) scale(1);}
+  }
+  .rank-list{display:flex; flex-direction:column; gap:12px; margin:22px 0 8px;}
+  .rank-row{
+    display:flex; align-items:center; gap:14px;
+    background:rgba(255,255,255,0.05); border:2px solid rgba(255,255,255,0.1);
+    border-radius:16px; padding:14px 20px;
+  }
+  .rank-row.gold{border-color:var(--gold); background:rgba(242,183,5,0.12);}
+  .rank-row .rmedal{font-size:26px; width:34px; text-align:center; flex-shrink:0;}
+  .rank-row .rname{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:18px; flex:1; text-align:left; word-break:break-word;}
+  .rank-row .rscore{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:26px; flex-shrink:0;}
 
-        .card {
-            background: rgba(15, 23, 42, 0.6);
-            padding: 24px;
-            border-radius: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .card h2 {
-            margin-bottom: 16px;
-            color: var(--blue);
-            font-size: 1.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            font-weight: 600;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 14px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            background: #0f172a;
-            color: #fff;
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        input:focus {
-            border-color: var(--accent);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            background: var(--accent);
-            color: #0f172a;
-            font-weight: 800;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
-        }
-
-        .btn:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-        }
-
-        .btn-blue {
-            background: var(--blue);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
-        }
-        .btn-blue:hover { background: #2563eb; }
-
-        /* Lobi Ekranı */
-        .lobby-box {
-            text-align: center;
-        }
-
-        .code-display {
-            font-size: 3rem;
-            font-weight: 800;
-            color: var(--accent);
-            letter-spacing: 6px;
-            background: rgba(15, 23, 42, 0.8);
-            display: inline-block;
-            padding: 8px 24px;
-            border-radius: 12px;
-            margin: 12px 0 24px 0;
-            border: 2px stroke var(--accent);
-        }
-
-        .team-list {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-bottom: 30px;
-        }
-
-        @media (max-width: 600px) {
-            .team-list { grid-template-columns: 1fr; }
-        }
-
-        .team-card {
-            background: rgba(15, 23, 42, 0.7);
-            padding: 16px;
-            border-radius: 12px;
-            border: 2px dashed rgba(255, 255, 255, 0.2);
-            text-align: center;
-        }
-
-        .team-card.joined {
-            border-style: solid;
-            border-color: var(--correct);
-            background: rgba(16, 185, 129, 0.1);
-        }
-
-        /* Oyun Ekranı */
-        .game-header {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .score-card {
-            background: rgba(15, 23, 42, 0.8);
-            padding: 12px;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .score-card.active-user {
-            border-color: var(--accent);
-            box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
-        }
-
-        .score-title { font-size: 0.85rem; color: var(--text-muted); }
-        .score-val { font-size: 1.5rem; color: var(--accent); }
-
-        .timer-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 16px 0;
-        }
-
-        .timer-circle {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background: rgba(15, 23, 42, 0.9);
-            border: 4px solid var(--accent);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: var(--accent);
-        }
-
-        .question-box {
-            background: rgba(15, 23, 42, 0.9);
-            padding: 24px;
-            border-radius: 16px;
-            margin-bottom: 20px;
-            min-height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            font-size: 1.25rem;
-            font-weight: 700;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
-
-        @media (max-width: 600px) {
-            .options-grid { grid-template-columns: 1fr; }
-        }
-
-        .opt-btn {
-            background: rgba(15, 23, 42, 0.7);
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            padding: 16px;
-            border-radius: 12px;
-            color: var(--text-main);
-            font-size: 1.05rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-align: left;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-        }
-
-        .opt-btn:hover:not(:disabled) {
-            border-color: var(--accent);
-            background: rgba(245, 158, 11, 0.1);
-        }
-
-        .opt-btn.correct {
-            background: var(--correct) !important;
-            border-color: var(--correct) !important;
-            color: white;
-        }
-
-        .opt-btn.wrong {
-            background: var(--wrong) !important;
-            border-color: var(--wrong) !important;
-            color: white;
-        }
-
-        .opt-prefix {
-            background: rgba(255, 255, 255, 0.1);
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 12px;
-            font-weight: 800;
-        }
-
-        /* Sonuç Ekranı */
-        .leaderboard {
-            margin: 24px 0;
-        }
-
-        .rank-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px;
-            background: rgba(15, 23, 42, 0.7);
-            border-radius: 12px;
-            margin-bottom: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .rank-1 { border-color: #f59e0b; background: rgba(245, 158, 11, 0.15); }
-        .rank-2 { border-color: #94a3b8; }
-        .rank-3 { border-color: #b45309; }
-
-        #config-error {
-            display: none;
-            background: var(--wrong);
-            color: white;
-            padding: 12px 16px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: bold;
-        }
-    </style>
+  @media (max-width:900px){
+    .score-row{grid-template-columns:1fr;}
+    .score-panel .sp-score{font-size:28px;}
+    .options-grid{grid-template-columns:1fr;}
+  }
+</style>
 </head>
 <body>
+<div id="app">
 
-    <div class="container">
-        <div id="config-error"></div>
-
-        <!-- 1. GİRİŞ EKRANI -->
-        <div id="screen-home" class="screen active">
-            <div class="header-logo">
-                <h1>ÇFK Genel Kültür Yarışması</h1>
-                <p style="color: var(--text-muted);">Sınıflar Arası Canlı & Eş Zamanlı Bilgi Yarışması</p>
-            </div>
-
-            <div class="panel-grid">
-                <!-- Oda Oluştur -->
-                <div class="card">
-                    <h2>Oda Oluştur (Ev Sahibi)</h2>
-                    <div class="form-group">
-                        <label>Sınıfınız / Takımınız</label>
-                        <input type="text" id="create-class-name" placeholder="Örn: 8-A" maxlength="12">
-                    </div>
-                    <button class="btn" onclick="createRoom()">Oda Aç & Katıl</button>
-                </div>
-
-                <!-- Odaya Katıl -->
-                <div class="card">
-                    <h2>Odaya Katıl (Rakip Sınıf)</h2>
-                    <div class="form-group">
-                        <label>Oda Kodu</label>
-                        <input type="text" id="join-room-code" placeholder="4 Haneli Kod" maxlength="4">
-                    </div>
-                    <div class="form-group">
-                        <label>Sınıfınız / Takımınız</label>
-                        <input type="text" id="join-class-name" placeholder="Örn: 8-B" maxlength="12">
-                    </div>
-                    <button class="btn btn-blue" onclick="joinRoom()">Odaya Giriş Yap</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 2. LOBİ EKRANI -->
-        <div id="screen-lobby" class="screen">
-            <div class="lobby-box">
-                <h2>Yarışma Lobisi</h2>
-                <p style="color: var(--text-muted);">Diğer sınıfların katılması bekleniyor...</p>
-                <div class="code-display" id="lobby-code">----</div>
-
-                <div class="team-list" id="team-list-container">
-                    <!-- Takımlar Firebase'den Canlı Çekilecek -->
-                </div>
-
-                <button class="btn" id="start-btn" style="max-width: 300px; display: none;" onclick="startGameHost()">Yarışmayı Başlat</button>
-                <p id="waiting-msg" style="color: var(--accent); font-weight: 700;">Ev sahibinin yarışmayı başlatması bekleniyor...</p>
-            </div>
-        </div>
-
-        <!-- 3. OYUN EKRANI -->
-        <div id="screen-game" class="screen">
-            <div class="game-header" id="live-scores">
-                <!-- Canlı Puan Tablosu -->
-            </div>
-
-            <div class="timer-container">
-                <div class="timer-circle" id="timer">15</div>
-            </div>
-
-            <div style="text-align: center; margin-bottom: 8px; color: var(--text-muted); font-weight: 700;">
-                Soru <span id="q-num">1</span> / <span id="q-total">10</span>
-            </div>
-
-            <div class="question-box" id="question-text">
-                Soru yükleniyor...
-            </div>
-
-            <div class="options-grid" id="options-container">
-                <!-- A, B, C, D Şıkları -->
-            </div>
-        </div>
-
-        <!-- 4. SONUÇ EKRANI -->
-        <div id="screen-result" class="screen">
-            <div style="text-align: center; margin-bottom: 24px;">
-                <h1 style="color: var(--accent); font-size: 3rem;">Yarışma Bitti!</h1>
-                <p style="color: var(--text-muted);">Genel Sıralama ve Sonuç Tablosu</p>
-            </div>
-
-            <div class="leaderboard" id="leaderboard-container">
-                <!-- Sonuçlar En Yüksek Puana Göre Dizilecek -->
-            </div>
-
-            <button class="btn" onclick="location.reload()">Ana Sayfaya Dön</button>
-        </div>
+  <div id="topbar">
+    <div style="font-size: 32px;">🎓</div>
+    <div class="brand-text">
+      <span class="club">ÇFK</span>
+      <span class="sub">Genel Kültür Yarışması</span>
     </div>
+    <div class="spacer"></div>
+    <div id="room-badge">ODA KODU <b id="room-badge-code">----</b></div>
+  </div>
 
-    <script>
-        // FIREBASE YAPILANDIRMASI
-        const firebaseConfig = {
-            apiKey: "AIzaSyA9Lk5ac3TrXhNmA5EZCAaE_JAopjAlfxA",
-            authDomain: "genelkultur-43f16.firebaseapp.com",
-            databaseURL: "https://genelkultur-43f16-default-rtdb.firebaseio.com",
-            projectId: "genelkultur-43f16",
-            storageBucket: "genelkultur-43f16.firebasestorage.app",
-            messagingSenderId: "936905663069",
-            appId: "1:936905663069:web:ebf12a7be5d255c950e3b4",
-            measurementId: "G-LJTNJ7M3DP"
-        };
+  <!-- HOME SCREEN -->
+  <div class="screen active" id="screen-home">
+    <div class="card" style="max-width:560px; width:100%;">
+      <div id="home-logo-placeholder">🏆</div>
+      <h1 class="title">Hazır mısınız?</h1>
+      <p class="lead">Sınıfını seç, iki rakip sınıfla yarış, en yüksek puanı topla!</p>
 
-        // SORU BANKASI KÜTÜPHANESİ
-        const questions = [
-            {
-                q: "Türkiye Cumhuriyeti'nin ilk Cumhurbaşkanı kimdir?",
-                opts: ["İsmet İnönü", "Mustafa Kemal Atatürk", "Fevzi Çakmak", "Celal Bayar"],
-                answer: 1
-            },
-            {
-                q: "İstiklal Marşı'mızın şairi kimdir?",
-                opts: ["Mehmet Akif Ersoy", "Yahya Kemal Beyatlı", "Namık Kemal", "Ziya Gökalp"],
-                answer: 0
-            },
-            {
-                q: "Dünyanın en büyük okyanusu hangisidir?",
-                opts: ["Atlas Okyanusu", "Hint Okyanusu", "Büyük Okyanus (Pasifik)", "Arktik Okyanusu"],
-                answer: 2
-            },
-            {
-                q: "Fatih Sultan Mehmet İstanbul'u kaç yılında fethetmiştir?",
-                opts: ["1071", "1299", "1453", "1923"],
-                answer: 2
-            },
-            {
-                q: "Güneş Sisteminde 'Kızıl Gezegen' olarak bilinen gezegen hangisidir?",
-                opts: ["Venüs", "Mars", "Jüpiter", "Satürn"],
-                answer: 1
-            },
-            {
-                q: "Dünyanın en uzun nehrinin adı nedir?",
-                opts: ["Nil Nehri", "Amazon Nehri", "Tuna Nehri", "Fırat Nehri"],
-                answer: 0
-            },
-            {
-                q: "Türk bayrağındaki al rengin simgelediği temel değer nedir?",
-                opts: ["Gökyüzü", "Şehitlerin Kanı", "Bağımsızlık", "Toprak"],
-                answer: 1
-            },
-            {
-                q: "Periyodik tabloda 'O' simgesi ile gösterilen element hangisidir?",
-                opts: ["Altın", "Oksijen", "Ozmuyum", "Helyum"],
-                answer: 1
-            },
-            {
-                q: "Türkiye'nin başkenti neresidir?",
-                opts: ["İstanbul", "İzmir", "Bursa", "Ankara"],
-                answer: 3
-            },
-            {
-                q: "İnsan vücudunda kanı pompalamakla görevli organ hangisidir?",
-                opts: ["Akciğer", "Karaciğer", "Kalp", "Böbrek"],
-                answer: 2
-            }
-        ];
+      <div class="choice-row" id="home-choices">
+        <div class="choice-card" id="choice-create">
+          <span class="emoji">🛡️</span>
+          <div class="ct">Oda Oluştur</div>
+          <div class="cs">Yeni bir yarışma başlat</div>
+        </div>
+        <div class="choice-card" id="choice-join">
+          <span class="emoji">🔑</span>
+          <div class="ct">Odaya Katıl</div>
+          <div class="cs">4 haneli kodla katıl</div>
+        </div>
+      </div>
 
-        // GLOBAL DEĞİŞKENLER
-        let currentRoomCode = "";
-        let myTeamName = "";
-        let isHost = false;
-        let roomRef = null;
-        let timerInterval = null;
-        let currentQuestionIndex = 0;
-        let localScore = 0;
-        let answeredCurrent = false;
+      <div class="form-panel" id="panel-create">
+        <div class="field">
+          <label>Sınıfınızın Adı</label>
+          <input type="text" id="create-name" maxlength="24" placeholder="Örn: 5-A Sınıfı">
+        </div>
+        <div class="error-msg" id="create-error"></div>
+        <button class="btn btn-primary btn-block" id="create-submit">Oda Oluştur</button>
+        <button class="back-link" data-back>← Geri dön</button>
+      </div>
 
-        // FIREBASE BAŞLATMA
-        try {
-            firebase.initializeApp(firebaseConfig);
-            var db = firebase.database();
-        } catch (e) {
-            document.getElementById('config-error').innerText = "Firebase Başlatılamadı: " + e.message;
-            document.getElementById('config-error').style.display = 'block';
-        }
+      <div class="form-panel" id="panel-join">
+        <div class="field">
+          <label>Oda Kodu</label>
+          <input type="text" id="join-code" class="code-input" maxlength="4" placeholder="0000" inputmode="numeric">
+        </div>
+        <div class="field">
+          <label>Sınıfınızın Adı</label>
+          <input type="text" id="join-name" maxlength="24" placeholder="Örn: 5-B Sınıfı">
+        </div>
+        <div class="error-msg" id="join-error"></div>
+        <button class="btn btn-primary btn-block" id="join-submit">Odaya Katıl</button>
+        <button class="back-link" data-back>← Geri dön</button>
+      </div>
+    </div>
+  </div>
 
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
+  <!-- LOBBY SCREEN -->
+  <div class="screen" id="screen-lobby">
+    <div class="card" style="max-width:720px; width:100%; position:relative;">
+      <div class="lobby-code">
+        <div class="cap">ODA KODU — Diğer sınıflara bu kodu verin</div>
+        <div class="val" id="lobby-code-val">----</div>
+      </div>
+      <div class="lobby-teams">
+        <div class="team-slot" id="lobby-team1">
+          <div class="tname" id="lobby-team1-name">—</div>
+          <div class="tstatus waiting" id="lobby-team1-status">Bekleniyor</div>
+        </div>
+        <div class="vs-badge">VS</div>
+        <div class="team-slot empty" id="lobby-team2">
+          <div class="tname" id="lobby-team2-name">Sınıf bekleniyor...</div>
+          <div class="tstatus waiting" id="lobby-team2-status">—</div>
+        </div>
+        <div class="vs-badge">VS</div>
+        <div class="team-slot empty" id="lobby-team3">
+          <div class="tname" id="lobby-team3-name">Sınıf bekleniyor...</div>
+          <div class="tstatus waiting" id="lobby-team3-status">—</div>
+        </div>
+      </div>
+      <div style="text-align:center;">
+        <button class="btn btn-primary" id="lobby-ready-btn">Hazırız! ✅</button>
+        <div class="status-line" id="lobby-hint">Diğer sınıfların katılmasını veya hazır olmasını bekleyin.</div>
+      </div>
 
-        // 1. ODA OLUŞTURMA (HOST)
-        function createRoom() {
-            const className = document.getElementById('create-class-name').value.trim();
-            if (!className) return alert("Lütfen bir sınıf adı girin!");
+      <div class="countdown-overlay" id="countdown-overlay">
+        <div class="countdown-num" id="countdown-num">3</div>
+        <div class="countdown-label">YARIŞMA BAŞLIYOR</div>
+      </div>
+    </div>
+  </div>
 
-            myTeamName = className;
-            isHost = true;
-            currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
+  <!-- GAME SCREEN -->
+  <div class="screen" id="screen-game">
+    <div class="game-layout">
+      <div class="score-row">
+        <div class="score-panel mine" id="panel-slot0">
+          <div class="sp-info">
+            <div class="sp-cap" id="slot0-cap">1. SINIF</div>
+            <div class="sp-name" id="slot0-name">—</div>
+          </div>
+          <div class="sp-score" id="slot0-score">0</div>
+        </div>
+        <div class="score-panel rival" id="panel-slot1">
+          <div class="sp-info">
+            <div class="sp-cap" id="slot1-cap">2. SINIF</div>
+            <div class="sp-name" id="slot1-name">—</div>
+          </div>
+          <div class="sp-score" id="slot1-score">0</div>
+        </div>
+        <div class="score-panel rival" id="panel-slot2">
+          <div class="sp-info">
+            <div class="sp-cap" id="slot2-cap">3. SINIF</div>
+            <div class="sp-name" id="slot2-name">—</div>
+          </div>
+          <div class="sp-score" id="slot2-score">0</div>
+        </div>
+      </div>
 
-            roomRef = db.ref('rooms/' + currentRoomCode);
+      <div class="center-col">
+        <div class="meta-row">
+          <div class="q-progress" id="q-progress">Soru 1/15</div>
+          <div class="q-category" id="q-category">Genel Kültür</div>
+          <div class="timer-wrap">
+            <svg width="64" height="64" viewBox="0 0 64 64">
+              <circle class="ring-bg" cx="32" cy="32" r="27"></circle>
+              <circle class="ring-fg" id="ring-fg" cx="32" cy="32" r="27"></circle>
+            </svg>
+            <div class="tnum" id="timer-num">20</div>
+          </div>
+        </div>
+        <div class="question-card" id="question-card">
+          <div class="q-text" id="q-text">Soru yükleniyor...</div>
+          <div class="options-grid" id="options-grid"></div>
+          <div class="status-line" id="game-status-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-            roomRef.set({
-                host: myTeamName,
-                status: 'waiting',
-                currentQ: 0,
-                teams: {
-                    [myTeamName]: { score: 0 }
-                }
-            }).then(() => {
-                initLobby();
-            }).catch(err => alert("Oda açılamadı: " + err.message));
-        }
+  <!-- RESULT SCREEN -->
+  <div class="screen" id="screen-result">
+    <div class="card" style="max-width:560px; width:100%; text-align:center;">
+      <div class="result-trophy">🏆</div>
+      <h1 class="title" id="result-headline">Tebrikler!</h1>
+      <div class="rank-list" id="rank-list"></div>
+      <p class="lead" style="margin-top:10px;">Harika bir yarışmaydı!</p>
+      <button class="btn btn-primary" id="result-newgame">Yeni Oyun</button>
+    </div>
+  </div>
 
-        // 2. ODAYA KATILMA (GUEST)
-        function joinRoom() {
-            const code = document.getElementById('join-room-code').value.trim();
-            const className = document.getElementById('join-class-name').value.trim();
+</div>
 
-            if (!code || !className) return alert("Tüm alanları doldurun!");
+<script>
+/* =========================================================================
+   ÇFK GENEL KÜLTÜR YARIŞMASI - TAM İŞLEVSEL YEREL & ÇEVRİMİÇİ YARIŞMA ENGINE
+   ========================================================================= */
 
-            myTeamName = className;
-            isHost = false;
-            currentRoomCode = code;
-            roomRef = db.ref('rooms/' + currentRoomCode);
+// 1) SORU VERİ SETİ (15 Soru)
+const QUESTION_BANK = [
+  {
+    category: "Tarih",
+    question: "Türkiye Cumhuriyeti'nin kurucusu ve ilk Cumhurbaşkanı kimdir?",
+    options: ["İsmet İnönü", "Mustafa Kemal Atatürk", "Fevzi Çakmak", "Kazım Karabekir"],
+    answer: 1
+  },
+  {
+    category: "Coğrafya",
+    question: "Türkiye'nin başkenti hangi ilimizdir?",
+    options: ["İstanbul", "İzmir", "Ankara", "Bursa"],
+    answer: 2
+  },
+  {
+    category: "Bilim",
+    question: "Güneş Sistemimizdeki en büyük gezegen hangisidir?",
+    options: ["Mars", "Jüpiter", "Satürn", "Dünya"],
+    answer: 1
+  },
+  {
+    category: "Genel Kültür",
+    question: "İstiklal Marşımızın şairi kimdir?",
+    options: ["Mehmet Akif Ersoy", "Yahya Kemal Beyatlı", "Ziya Gökalp", "Namık Kemal"],
+    answer: 0
+  },
+  {
+    category: "Coğrafya",
+    question: "Dünyanın en uzun nehri kabul edilen Nil Nehri hangi kıtadadır?",
+    options: ["Asya", "Avrupa", "Afrika", "Amerika"],
+    answer: 2
+  },
+  {
+    category: "Edebiyat",
+    question: "Dünyaca ünlü 'Sefiller' romanının yazarı kimdir?",
+    options: ["Victor Hugo", "Émile Zola", "Charles Dickens", "Lev Tolstoy"],
+    answer: 0
+  },
+  {
+    category: "Tarih",
+    question: "İstanbul hangi yılda Fatih Sultan Mehmet tarafından fethedilmiştir?",
+    options: ["1071", "1299", "1453", "1923"],
+    answer: 2
+  },
+  {
+    category: "Sanat",
+    question: "Dünyaca ünlü 'Mona Lisa' tablosunun ressamı kimdir?",
+    options: ["Pablo Picasso", "Leonardo da Vinci", "Vincent van Gogh", "Salvador Dalí"],
+    answer: 1
+  },
+  {
+    category: "Sporsal Kültür",
+    question: "Olimpiyat halkalarında kaç adet renkli halka bulunur?",
+    options: ["4", "5", "6", "7"],
+    answer: 1
+  },
+  {
+    category: "Bilim",
+    question: "Suyun kimyasal sembolü aşağıdakilerden hangisidir?",
+    options: ["CO2", "H2O", "NaCl", "O2"],
+    answer: 1
+  },
+  {
+    category: "Coğrafya",
+    question: "Yüzölçümü bakımından Türkiye'nin en büyük coğrafi bölgesi hangisidir?",
+    options: ["Marmara Bölgesi", "İç Anadolu Bölgesi", "Doğu Anadolu Bölgesi", "Karadeniz Bölgesi"],
+    answer: 2
+  },
+  {
+    category: "Genel Kültür",
+    question: "Türk bayrağındaki ay ve yıldızın rengi nedir?",
+    options: ["Sarı", "Kırmızı", "Beyaz", "Mavi"],
+    answer: 2
+  },
+  {
+    category: "Tarih",
+    question: "Anadolu'nun kapılarını Türklere açan Malazgirt Meydan Muharebesi hangi yılda yapılmıştır?",
+    options: ["1071", "1176", "1243", "1402"],
+    answer: 0
+  },
+  {
+    category: "Müzik",
+    question: "Klasik müzikte '4. Senfoni' ve '5. Senfoni' gibi dev eserleriyle tanınan işitme engelli besteci kimdir?",
+    options: ["Mozart", "Beethoven", "Bach", "Vivaldi"],
+    answer: 1
+  },
+  {
+    category: "Coğrafya",
+    question: "Dünyanın en derin noktası kabul edilen 'Mariana Çukuru' hangi okyanustadır?",
+    options: ["Atlas Okyanusu", "Hint Okyanusu", "Büyük Okyanus (Pasifik)", "Kuzey Buz Okyanusu"],
+    answer: 2
+  }
+];
 
-            roomRef.once('value', snapshot => {
-                if (!snapshot.exists()) {
-                    alert("Oda bulunamadı!");
-                    return;
-                }
+// OYUN DURUMU (STATE)
+let gameState = {
+  roomCode: "",
+  myTeamName: "",
+  myTeamIndex: 0,
+  teams: [],
+  currentQuestionIndex: 0,
+  scores: [0, 0, 0],
+  selectedOption: null,
+  timer: 20,
+  timerInterval: null
+};
 
-                const data = snapshot.val();
-                const teamCount = Object.keys(data.teams || {}).length;
+// EKRAN YÖNETİMİ
+function showScreen(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+}
 
-                if (teamCount >= 3 && !data.teams[myTeamName]) {
-                    alert("Oda dolu! En fazla 3 sınıf katılabilir.");
-                    return;
-                }
+// HOME EKRANI ETKİLEŞİMLERİ
+document.getElementById('choice-create').addEventListener('click', () => {
+  document.getElementById('home-choices').style.display = 'none';
+  document.getElementById('panel-create').classList.add('active');
+});
 
-                db.ref(`rooms/${currentRoomCode}/teams/${myTeamName}`).set({
-                    score: 0
-                }).then(() => {
-                    initLobby();
-                });
-            });
-        }
+document.getElementById('choice-join').addEventListener('click', () => {
+  document.getElementById('home-choices').style.display = 'none';
+  document.getElementById('panel-join').classList.add('active');
+});
 
-        // 3. LOBİ TAKİBİ
-        function initLobby() {
-            showScreen('screen-lobby');
-            document.getElementById('lobby-code').innerText = currentRoomCode;
+document.querySelectorAll('[data-back]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById('panel-create').classList.remove('active');
+    document.getElementById('panel-join').classList.remove('active');
+    document.getElementById('home-choices').style.display = 'flex';
+  });
+});
 
-            if (isHost) {
-                document.getElementById('start-btn').style.display = 'inline-block';
-                document.getElementById('waiting-msg').style.display = 'none';
-            }
+// ODA OLUŞTURMA
+document.getElementById('create-submit').addEventListener('click', () => {
+  const nameInput = document.getElementById('create-name').value.trim();
+  const errDiv = document.getElementById('create-error');
+  
+  if(!nameInput) {
+    errDiv.textContent = "Lütfen sınıfınızın adını girin.";
+    errDiv.style.display = "block";
+    return;
+  }
+  errDiv.style.display = "none";
 
-            // Canlı Takım Dinleme
-            roomRef.child('teams').on('value', snapshot => {
-                const teams = snapshot.val() || {};
-                const container = document.getElementById('team-list-container');
-                container.innerHTML = "";
+  gameState.roomCode = Math.floor(1000 + Math.random() * 9000).toString();
+  gameState.myTeamName = nameInput;
+  gameState.myTeamIndex = 0;
+  gameState.teams = [
+    { name: nameInput, ready: true },
+    { name: "5-B Sınıfı (Bot)", ready: true },
+    { name: "5-C Sınıfı (Bot)", ready: true }
+  ];
 
-                Object.keys(teams).forEach(tName => {
-                    const card = document.createElement('div');
-                    card.className = "team-card joined";
-                    card.innerHTML = `<h3>${tName}</h3><p style="color: var(--correct); font-size: 0.9rem;">Ready</p>`;
-                    container.appendChild(card);
-                });
-            });
+  initLobby();
+});
 
-            // Oyun Başladı mı Takip Et
-            roomRef.child('status').on('value', snapshot => {
-                if (snapshot.val() === 'playing') {
-                    startGameUI();
-                }
-            });
+// ODAYA KATILMA
+document.getElementById('join-submit').addEventListener('click', () => {
+  const codeInput = document.getElementById('join-code').value.trim();
+  const nameInput = document.getElementById('join-name').value.trim();
+  const errDiv = document.getElementById('join-error');
 
-            // Soru Geçişlerini Dinle
-            roomRef.child('currentQ').on('value', snapshot => {
-                if (snapshot.exists()) {
-                    currentQuestionIndex = snapshot.val();
-                    if (document.getElementById('screen-game').classList.contains('active')) {
-                        loadQuestion(currentQuestionIndex);
-                    }
-                }
-            });
-        }
+  if(codeInput.length !== 4) {
+    errDiv.textContent = "4 haneli oda kodunu girin.";
+    errDiv.style.display = "block";
+    return;
+  }
+  if(!nameInput) {
+    errDiv.textContent = "Lütfen sınıfınızın adını girin.";
+    errDiv.style.display = "block";
+    return;
+  }
+  errDiv.style.display = "none";
 
-        // HOST OYUNU BAŞLATIR
-        function startGameHost() {
-            roomRef.update({
-                status: 'playing',
-                currentQ: 0
-            });
-        }
+  gameState.roomCode = codeInput;
+  gameState.myTeamName = nameInput;
+  gameState.myTeamIndex = 1;
+  gameState.teams = [
+    { name: "5-A Sınıfı (Ev Sahibi)", ready: true },
+    { name: nameInput, ready: true },
+    { name: "5-C Sınıfı (Bot)", ready: true }
+  ];
 
-        // OYUN EKRANINI HAZIRLA
-        function startGameUI() {
-            showScreen('screen-game');
-            document.getElementById('q-total').innerText = questions.length;
-            listenScores();
-            loadQuestion(0);
-        }
+  initLobby();
+});
 
-        // CANLI SKORLARI DİNLE
-        function listenScores() {
-            roomRef.child('teams').on('value', snapshot => {
-                const teams = snapshot.val() || {};
-                const scoreDiv = document.getElementById('live-scores');
-                scoreDiv.innerHTML = "";
+// LOBİ HAZIRLIĞI
+function initLobby() {
+  document.getElementById('room-badge').style.display = 'flex';
+  document.getElementById('room-badge-code').textContent = gameState.roomCode;
+  document.getElementById('lobby-code-val').textContent = gameState.roomCode;
 
-                Object.keys(teams).forEach(tName => {
-                    const isMe = tName === myTeamName;
-                    const card = document.createElement('div');
-                    card.className = `score-card ${isMe ? 'active-user' : ''}`;
-                    card.innerHTML = `
-                        <div class="score-title">${tName} ${isMe ? '(Siz)' : ''}</div>
-                        <div class="score-val">${teams[tName].score || 0}</div>
-                    `;
-                    scoreDiv.appendChild(card);
-                });
-            });
-        }
+  for(let i = 0; i < 3; i++) {
+    const slot = document.getElementById(`lobby-team${i+1}`);
+    const nameEl = document.getElementById(`lobby-team${i+1}-name`);
+    const statusEl = document.getElementById(`lobby-team${i+1}-status`);
+    
+    if(gameState.teams[i]) {
+      slot.classList.remove('empty');
+      nameEl.textContent = gameState.teams[i].name;
+      statusEl.textContent = "Hazır ✅";
+      statusEl.className = "tstatus ready";
+      if(i === gameState.myTeamIndex) {
+        slot.classList.add('me');
+      }
+    }
+  }
 
-        // SORUYU EKRANA YÜKLE
-        function loadQuestion(index) {
-            if (index >= questions.length) {
-                endGame();
-                return;
-            }
+  showScreen('screen-lobby');
+}
 
-            answeredCurrent = false;
-            const q = questions[index];
-            document.getElementById('q-num').innerText = index + 1;
-            document.getElementById('question-text').innerText = q.q;
+// LOBİ HAZIR BUTONU & GERİ SAYIM
+document.getElementById('lobby-ready-btn').addEventListener('click', () => {
+  const overlay = document.getElementById('countdown-overlay');
+  const numEl = document.getElementById('countdown-num');
+  overlay.classList.add('active');
+  
+  let count = 3;
+  numEl.textContent = count;
+  
+  const timer = setInterval(() => {
+    count--;
+    if(count > 0) {
+      numEl.textContent = count;
+    } else {
+      clearInterval(timer);
+      overlay.classList.remove('active');
+      startGame();
+    }
+  }, 1000);
+});
 
-            const optsDiv = document.getElementById('options-container');
-            optsDiv.innerHTML = "";
+// OYUNU BAŞLATMA
+function startGame() {
+  gameState.currentQuestionIndex = 0;
+  gameState.scores = [0, 0, 0];
+  
+  for(let i = 0; i < 3; i++) {
+    document.getElementById(`slot${i}-name`).textContent = gameState.teams[i].name;
+    document.getElementById(`slot${i}-score`).textContent = "0";
+  }
 
-            const prefixes = ["A", "B", "C", "D"];
-            q.opts.forEach((opt, i) => {
-                const btn = document.createElement('button');
-                btn.className = 'opt-btn';
-                btn.innerHTML = `<span class="opt-prefix">${prefixes[i]}</span> ${opt}`;
-                btn.onclick = () => submitAnswer(i, btn);
-                optsDiv.appendChild(btn);
-            });
+  showScreen('screen-game');
+  loadQuestion();
+}
 
-            startTimer();
-        }
+// SORU YÜKLEME
+function loadQuestion() {
+  if(gameState.currentQuestionIndex >= QUESTION_BANK.length) {
+    showResults();
+    return;
+  }
 
-        // CEVAP VERME
-        function submitAnswer(chosenIndex, btnElement) {
-            if (answeredCurrent) return;
-            answeredCurrent = true;
+  const q = QUESTION_BANK[gameState.currentQuestionIndex];
+  gameState.selectedOption = null;
+  gameState.timer = 20;
 
-            clearInterval(timerInterval);
-            const q = questions[currentQuestionIndex];
-            const allBtns = document.querySelectorAll('.opt-btn');
+  document.getElementById('q-progress').textContent = `Soru ${gameState.currentQuestionIndex + 1}/${QUESTION_BANK.length}`;
+  document.getElementById('q-category').textContent = q.category;
+  document.getElementById('q-text').textContent = q.question;
+  document.getElementById('game-status-line').textContent = "Cevabınızı seçin...";
 
-            allBtns.forEach(b => b.disabled = true);
+  const grid = document.getElementById('options-grid');
+  grid.innerHTML = '';
 
-            if (chosenIndex === q.answer) {
-                btnElement.classList.add('correct');
-                localScore += 10;
-                db.ref(`rooms/${currentRoomCode}/teams/${myTeamName}/score`).set(localScore);
-            } else {
-                btnElement.classList.add('wrong');
-                allBtns[q.answer].classList.add('correct');
-            }
+  const badges = ['A', 'B', 'C', 'D'];
+  q.options.forEach((optText, index) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.innerHTML = `
+      <div class="opt-badge">${badges[index]}</div>
+      <div class="opt-text">${optText}</div>
+    `;
+    btn.addEventListener('click', () => selectOption(index));
+    grid.appendChild(btn);
+  });
 
-            setTimeout(() => {
-                if (isHost) {
-                    roomRef.update({ currentQ: currentQuestionIndex + 1 });
-                }
-            }, 2500);
-        }
+  resetTimerRing();
+  startTimer();
+}
 
-        // SÜRE YÖNETİMİ
-        function startTimer() {
-            clearInterval(timerInterval);
-            let time = 15;
-            document.getElementById('timer').innerText = time;
+// ZAMANLAYICI
+function startTimer() {
+  clearInterval(gameState.timerInterval);
+  const ringFg = document.getElementById('ring-fg');
+  const timerNum = document.getElementById('timer-num');
+  
+  const circumference = 2 * Math.PI * 27; // ~169.64
+  
+  gameState.timerInterval = setInterval(() => {
+    gameState.timer--;
+    timerNum.textContent = gameState.timer;
+    
+    const offset = circumference - (gameState.timer / 20) * circumference;
+    ringFg.style.strokeDashoffset = offset;
 
-            timerInterval = setInterval(() => {
-                time--;
-                document.getElementById('timer').innerText = time;
+    if(gameState.timer <= 5) {
+      ringFg.classList.add('warn');
+    } else {
+      ringFg.classList.remove('warn');
+    }
 
-                if (time <= 0) {
-                    clearInterval(timerInterval);
-                    if (!answeredCurrent) {
-                        answeredCurrent = true;
-                        const q = questions[currentQuestionIndex];
-                        const allBtns = document.querySelectorAll('.opt-btn');
-                        allBtns.forEach(b => b.disabled = true);
-                        if(allBtns[q.answer]) allBtns[q.answer].classList.add('correct');
+    if(gameState.timer <= 0) {
+      clearInterval(gameState.timerInterval);
+      evaluateTurn();
+    }
+  }, 1000);
+}
 
-                        setTimeout(() => {
-                            if (isHost) {
-                                roomRef.update({ currentQ: currentQuestionIndex + 1 });
-                            }
-                        }, 2000);
-                    }
-                }
-            }, 1000);
-        }
+function resetTimerRing() {
+  const ringFg = document.getElementById('ring-fg');
+  ringFg.classList.remove('warn');
+  ringFg.style.strokeDashoffset = 0;
+  document.getElementById('timer-num').textContent = "20";
+}
 
-        // OYUNU BITIR VE SKOR TABLOSUNU GÖSTER
-        function endGame() {
-            clearInterval(timerInterval);
-            showScreen('screen-result');
+// CEVAP SEÇME
+function selectOption(index) {
+  if(gameState.selectedOption !== null) return;
+  
+  gameState.selectedOption = index;
+  const buttons = document.querySelectorAll('.opt-btn');
+  buttons[index].classList.add('picked-mine');
+  
+  document.getElementById('game-status-line').textContent = "Cevabınız kaydedildi. Süre dolunca sonuç gösterilecek.";
+}
 
-            roomRef.child('teams').once('value', snapshot => {
-                const teams = snapshot.val() || {};
-                const sorted = Object.keys(teams)
-                    .map(name => ({ name, score: teams[name].score || 0 }))
-                    .sort((a, b) => b.score - a.score);
+// CEVAPLARI DEĞERLENDİRME & PUANLAMA
+function evaluateTurn() {
+  clearInterval(gameState.timerInterval);
+  const q = QUESTION_BANK[gameState.currentQuestionIndex];
+  const buttons = document.querySelectorAll('.opt-btn');
 
-                const container = document.getElementById('leaderboard-container');
-                container.innerHTML = "";
+  // Butonları kilitle ve doğru cevabı göster
+  buttons.forEach((btn, idx) => {
+    btn.disabled = true;
+    if(idx === q.answer) {
+      btn.classList.add('reveal-correct');
+    }
+  });
 
-                const medals = ["🥇", "🥈", "🥉"];
-                sorted.forEach((item, i) => {
-                    const row = document.createElement('div');
-                    row.className = `rank-item rank-${i + 1}`;
-                    row.innerHTML = `
-                        <div style="font-weight: 800; font-size: 1.2rem;">
-                            ${medals[i] || '🎗️'} ${i + 1}. ${item.name}
-                        </div>
-                        <div class="score-val" style="font-size: 1.6rem;">${item.score} Puan</div>
-                    `;
-                    container.appendChild(row);
-                });
-            });
-        }
-    </script>
+  if(gameState.selectedOption !== null) {
+    if(gameState.selectedOption === q.answer) {
+      gameState.scores[gameState.myTeamIndex] += 100;
+    } else {
+      buttons[gameState.selectedOption].classList.add('reveal-wrong-mine');
+    }
+  }
+
+  // Rakip bot takımlar için simülasyon puanlama
+  for(let i = 0; i < 3; i++) {
+    if(i !== gameState.myTeamIndex) {
+      // %70 ihtimalle doğru bilsinler
+      if(Math.random() < 0.7) {
+        gameState.scores[i] += 100;
+      }
+    }
+    document.getElementById(`slot${i}-score`).textContent = gameState.scores[i];
+  }
+
+  document.getElementById('game-status-line').textContent = "Sonraki soruya geçiliyor...";
+
+  setTimeout(() => {
+    gameState.currentQuestionIndex++;
+    loadQuestion();
+  }, 3000);
+}
+
+// SONUÇ EKRANI
+function showResults() {
+  showScreen('screen-result');
+  
+  // Sıralama Yap
+  const ranked = gameState.teams.map((t, idx) => ({
+    name: t.name,
+    score: gameState.scores[idx]
+  })).sort((a, b) => b.score - a.score);
+
+  const rankList = document.getElementById('rank-list');
+  rankList.innerHTML = '';
+
+  const medals = ['🥇', '🥈', '🥉'];
+  ranked.forEach((item, index) => {
+    const row = document.createElement('div');
+    row.className = `rank-row ${index === 0 ? 'gold' : ''}`;
+    row.innerHTML = `
+      <div class="rmedal">${medals[index]}</div>
+      <div class="rname">${item.name}</div>
+      <div class="rscore">${item.score} Puan</div>
+    `;
+    rankList.appendChild(row);
+  });
+
+  if(ranked[0].name === gameState.myTeamName) {
+    document.getElementById('result-headline').textContent = "Şampiyon Sınıfınız! 🏆";
+  } else {
+    document.getElementById('result-headline').textContent = "Yarışma Tamamlandı!";
+  }
+}
+
+// YENİ OYUN
+document.getElementById('result-newgame').addEventListener('click', () => {
+  document.getElementById('room-badge').style.display = 'none';
+  document.getElementById('panel-create').classList.remove('active');
+  document.getElementById('panel-join').classList.remove('active');
+  document.getElementById('home-choices').style.display = 'flex';
+  showScreen('screen-home');
+});
+</script>
 </body>
 </html>
