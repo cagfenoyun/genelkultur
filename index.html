@@ -127,7 +127,36 @@
   .choice-card .ct{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:25px;}
   .choice-card .cs{color:var(--gray-300); font-size:16px; font-weight:600; margin-top:6px;}
 
-  .form-panel{margin-top:34px; width:100%; max-width:480px; display:none; flex-direction:column; gap:18px;}
+  .home-columns{
+    display:flex; align-items:stretch; gap:0; margin-top:10px;
+  }
+  .home-col{
+    flex:1; min-width:0;
+    display:flex; flex-direction:column; gap:22px;
+    padding:6px 28px;
+  }
+  .home-col-head{
+    display:flex; align-items:center; gap:18px;
+  }
+  .home-col-head .emoji{font-size:48px; flex-shrink:0;}
+  .home-col-head .ct{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:26px;}
+  .home-col-head .cs{color:var(--gray-300); font-size:16px; font-weight:600; margin-top:2px;}
+  .home-divider{
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    flex-shrink:0; width:2px; align-self:stretch;
+    background:rgba(255,255,255,0.12);
+    position:relative;
+  }
+  .home-divider span{
+    position:absolute; top:50%; transform:translateY(-50%);
+    background:var(--navy-800);
+    color:var(--gray-300); font-weight:800; font-size:15px;
+    letter-spacing:1px; text-transform:uppercase;
+    padding:10px 6px; border-radius:10px;
+    border:1px solid rgba(255,255,255,0.14);
+  }
+
+  .form-panel{width:100%; max-width:none; display:none; flex-direction:column; gap:18px;}
   .form-panel.active{display:flex;}
   .field label{display:block; font-size:16px; font-weight:800; color:var(--gray-300); margin-bottom:8px; letter-spacing:0.3px;}
   .field input{
@@ -144,6 +173,12 @@
   .back-link{
     margin-top:10px; background:none; border:none; color:var(--gray-300);
     font-weight:700; cursor:pointer; font-size:18px; text-decoration:underline;
+  }
+
+  @media (max-width:860px){
+    .home-columns{flex-direction:column;}
+    .home-divider{width:auto; height:2px; align-self:stretch; margin:8px 0;}
+    .home-divider span{left:50%; top:50%; transform:translate(-50%,-50%);}
   }
 
   #screen-lobby .lobby-code{
@@ -388,45 +423,52 @@
   </div>
 
   <div class="screen" id="screen-home">
-    <div class="card" style="max-width:560px; width:100%;">
+    <div class="card home-card" style="max-width:1200px; width:100%;">
       <h1 class="title">Hazır mısınız? 🏆</h1>
       <p class="lead">Sınıfını seç, kodu paylaş, aynı kodu girenler odaya katılsın! (2-6 sınıf)</p>
 
-      <div class="choice-row" id="home-choices">
-        <div class="choice-card" id="choice-create">
-          <span class="emoji">🛡️</span>
-          <div class="ct">Oda Oluştur</div>
-          <div class="cs">Yeni bir yarışma başlat</div>
+      <div class="home-columns">
+        <div class="home-col">
+          <div class="home-col-head">
+            <span class="emoji">🛡️</span>
+            <div>
+              <div class="ct">Oda Oluştur</div>
+              <div class="cs">Yeni bir yarışma başlat</div>
+            </div>
+          </div>
+          <div class="form-panel active" id="panel-create">
+            <div class="field">
+              <label>Sınıfınızın adı</label>
+              <input type="text" id="create-name" maxlength="24" placeholder="Örn: 5-A Sınıfı">
+            </div>
+            <div class="error-msg" id="create-error"></div>
+            <button class="btn btn-primary btn-block" id="create-submit">Oda Oluştur</button>
+          </div>
         </div>
-        <div class="choice-card" id="choice-join">
-          <span class="emoji">🔑</span>
-          <div class="ct">Odaya Katıl</div>
-          <div class="cs">4 haneli kodla katıl</div>
-        </div>
-      </div>
 
-      <div class="form-panel" id="panel-create">
-        <div class="field">
-          <label>Sınıfınızın adı</label>
-          <input type="text" id="create-name" maxlength="24" placeholder="Örn: 5-A Sınıfı">
-        </div>
-        <div class="error-msg" id="create-error"></div>
-        <button class="btn btn-primary btn-block" id="create-submit">Oda Oluştur</button>
-        <button class="back-link" data-back="1">← Geri dön</button>
-      </div>
+        <div class="home-divider"><span>veya</span></div>
 
-      <div class="form-panel" id="panel-join">
-        <div class="field">
-          <label>Oda kodu</label>
-          <input type="text" id="join-code" class="code-input" maxlength="4" placeholder="0000" inputmode="numeric">
+        <div class="home-col">
+          <div class="home-col-head">
+            <span class="emoji">🔑</span>
+            <div>
+              <div class="ct">Odaya Katıl</div>
+              <div class="cs">4 haneli kodla katıl</div>
+            </div>
+          </div>
+          <div class="form-panel active" id="panel-join">
+            <div class="field">
+              <label>Oda kodu</label>
+              <input type="text" id="join-code" class="code-input" maxlength="4" placeholder="0000" inputmode="numeric">
+            </div>
+            <div class="field">
+              <label>Sınıfınızın adı</label>
+              <input type="text" id="join-name" maxlength="24" placeholder="Örn: 5-B Sınıfı">
+            </div>
+            <div class="error-msg" id="join-error"></div>
+            <button class="btn btn-primary btn-block" id="join-submit">Odaya Katıl</button>
+          </div>
         </div>
-        <div class="field">
-          <label>Sınıfınızın adı</label>
-          <input type="text" id="join-name" maxlength="24" placeholder="Örn: 5-B Sınıfı">
-        </div>
-        <div class="error-msg" id="join-error"></div>
-        <button class="btn btn-primary btn-block" id="join-submit">Odaya Katıl</button>
-        <button class="back-link" data-back="1">← Geri dön</button>
       </div>
     </div>
   </div>
@@ -601,27 +643,6 @@ document.getElementById('topbar-logo').src = 'Logo4.png';
 setTimeout(function() {
   showScreen('home');
 }, 4800);
-
-document.getElementById('choice-create').addEventListener('click', function() {
-  document.getElementById('home-choices').style.display = 'none';
-  document.getElementById('panel-create').classList.add('active');
-});
-
-document.getElementById('choice-join').addEventListener('click', function() {
-  document.getElementById('home-choices').style.display = 'none';
-  document.getElementById('panel-join').classList.add('active');
-});
-
-const backButtons = document.querySelectorAll('[data-back]');
-for (let i = 0; i < backButtons.length; i++) {
-  backButtons[i].addEventListener('click', function() {
-    document.getElementById('panel-create').classList.remove('active');
-    document.getElementById('panel-join').classList.remove('active');
-    document.getElementById('home-choices').style.display = 'flex';
-    document.getElementById('create-error').style.display = 'none';
-    document.getElementById('join-error').style.display = 'none';
-  });
-}
 
 document.getElementById('create-submit').addEventListener('click', async function() {
   const nameInput = document.getElementById('create-name').value.trim();
