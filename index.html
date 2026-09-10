@@ -38,17 +38,12 @@
   }
   #app{position:relative; width:100vw; height:100vh; display:flex; flex-direction:column;}
 
-  /* ---------- Header ---------- */
   #topbar{
     display:flex; align-items:center; gap:16px;
     padding:14px 28px;
     background:linear-gradient(180deg, rgba(10,27,51,0.9), rgba(10,27,51,0.0));
     position:relative; z-index:20;
     flex-shrink:0;
-  }
-  #topbar img{
-    height:56px; width:auto;
-    filter:drop-shadow(0 6px 14px rgba(0,0,0,0.5));
   }
   #topbar .brand-text{display:flex; flex-direction:column; line-height:1.05;}
   #topbar .brand-text .club{
@@ -70,7 +65,6 @@
   }
   #room-badge b{color:var(--gold); letter-spacing:3px; font-size:17px;}
 
-  /* ---------- Screen management ---------- */
   .screen{
     display:none; flex:1; min-height:0;
     flex-direction:column; align-items:center; justify-content:center;
@@ -79,7 +73,6 @@
   }
   .screen.active{display:flex;}
 
-  /* ---------- Shared card ---------- */
   .card{
     background:linear-gradient(180deg, rgba(21,54,98,0.75), rgba(15,39,74,0.85));
     border:1px solid rgba(255,255,255,0.08);
@@ -99,21 +92,6 @@
     margin:0 0 30px; font-size:17px;
   }
 
-  /* Hero icon */
-  #home-logo-placeholder{
-    display:flex; align-items:center; justify-content:center;
-    margin:0 auto 18px; height:100px; width:100px;
-    border-radius:50%; background:rgba(232,84,42,0.2);
-    border:3px solid var(--orange);
-    font-size:48px;
-    filter:drop-shadow(0 14px 26px rgba(0,0,0,0.55));
-    animation: logoSpin 6s linear infinite;
-  }
-  @keyframes logoSpin{
-    from{ transform:rotateY(0deg); }
-    to{ transform:rotateY(360deg); }
-  }
-
   .btn{
     font-family:'Baloo 2',sans-serif; font-weight:700; font-size:19px;
     border:none; border-radius:16px; cursor:pointer;
@@ -128,15 +106,8 @@
     box-shadow:0 10px 22px rgba(232,84,42,0.35);
   }
   .btn-primary:hover{filter:brightness(1.08);}
-  .btn-secondary{
-    background:rgba(255,255,255,0.08);
-    border:2px solid rgba(255,255,255,0.18);
-  }
-  .btn-secondary:hover{background:rgba(255,255,255,0.14);}
-  .btn:disabled{opacity:0.45; cursor:not-allowed; filter:none; transform:none;}
   .btn-block{width:100%;}
 
-  /* ---------- Home screen ---------- */
   #screen-home .choice-row{
     display:flex; gap:22px; margin-top:6px; flex-wrap:wrap; justify-content:center;
   }
@@ -170,7 +141,6 @@
     font-weight:700; cursor:pointer; font-size:14px; text-decoration:underline;
   }
 
-  /* ---------- Lobby ---------- */
   #screen-lobby .lobby-code{
     text-align:center; margin-bottom:26px;
   }
@@ -179,16 +149,15 @@
     font-family:'Baloo 2',sans-serif; font-size:52px; font-weight:800; color:var(--gold);
     letter-spacing:14px; margin-top:2px;
   }
-  .lobby-teams{display:flex; align-items:center; gap:14px; justify-content:center; flex-wrap:wrap;}
+  .lobby-teams{display:flex; align-items:center; gap:16px; justify-content:center; flex-wrap:wrap;}
   .team-slot{
     width:190px; min-height:150px; border-radius:18px; padding:18px 14px;
     background:rgba(255,255,255,0.05); border:2px solid rgba(255,255,255,0.1);
     text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
   }
   .team-slot.me{border-color:var(--orange);}
-  .team-slot.empty{border-style:dashed; opacity:0.55;}
   .team-slot .tname{font-family:'Baloo 2',sans-serif; font-size:18px; font-weight:700; word-break:break-word;}
-  .team-slot .tstatus{font-size:12px; font-weight:800; padding:5px 12px; border-radius:20px;}
+  .team-slot .tstatus{font-size:13px; font-weight:800; padding:5px 12px; border-radius:20px;}
   .tstatus.waiting{background:rgba(124,138,163,0.25); color:var(--gray-300);}
   .tstatus.ready{background:rgba(47,174,96,0.22); color:#7CE3A6;}
   .vs-badge{
@@ -197,7 +166,7 @@
   #lobby-ready-btn{margin-top:28px;}
   .countdown-overlay{
     position:absolute; inset:0; display:none; align-items:center; justify-content:center;
-    background:rgba(6,14,28,0.72); z-index:30; flex-direction:column; gap:8px; border-radius:22px;
+    background:rgba(6,14,28,0.72); z-index:30; flex-direction:column; gap:8px;
   }
   .countdown-overlay.active{display:flex;}
   .countdown-num{
@@ -206,28 +175,28 @@
   }
   .countdown-label{font-weight:800; color:var(--gray-300); letter-spacing:2px; font-size:16px;}
 
-  /* ---------- Game screen ---------- */
   #screen-game{padding:14px 24px 22px; justify-content:flex-start;}
   .game-layout{
-    width:100%; height:100%; display:flex; flex-direction:column; gap:16px; min-height:0;
+    width:100%; height:100%; display:grid;
+    grid-template-columns: 220px 1fr 220px;
+    gap:20px; align-items:stretch;
   }
-  .score-row{
-    display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; flex-shrink:0;
-  }
+  .rivals-col{display:flex; flex-direction:column; gap:14px; min-height:0;}
   .score-panel{
-    border-radius:18px; padding:14px 18px; display:flex; align-items:center; justify-content:space-between;
-    gap:10px; text-align:left;
+    border-radius:20px; padding:22px 18px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:8px; text-align:center;
     background:linear-gradient(180deg, rgba(21,54,98,0.65), rgba(15,39,74,0.75));
     border:1px solid rgba(255,255,255,0.08);
   }
   .score-panel.mine{border-bottom:4px solid var(--orange);}
-  .score-panel.rival{border-bottom:4px solid var(--navy-600);}
-  .score-panel .sp-info{display:flex; flex-direction:column; gap:2px; min-width:0;}
-  .score-panel .sp-cap{font-size:11px; font-weight:800; letter-spacing:1.5px; color:var(--gray-300);}
-  .score-panel .sp-name{font-family:'Baloo 2',sans-serif; font-size:16px; font-weight:700; word-break:break-word;}
-  .score-panel .sp-score{font-family:'Baloo 2',sans-serif; font-size:38px; font-weight:800; line-height:1; flex-shrink:0;}
+  .score-panel.rival{border-bottom:4px solid var(--navy-600); flex:1; padding:14px 12px;}
+  .score-panel .sp-cap{font-size:12px; font-weight:800; letter-spacing:2px; color:var(--gray-300);}
+  .score-panel .sp-name{font-family:'Baloo 2',sans-serif; font-size:19px; font-weight:700; margin:2px 0 10px; word-break:break-word;}
+  .score-panel.rival .sp-name{font-size:16px; margin:2px 0 6px;}
+  .score-panel .sp-score{font-family:'Baloo 2',sans-serif; font-size:54px; font-weight:800; line-height:1;}
+  .score-panel.rival .sp-score{font-size:36px;}
 
-  .center-col{display:flex; flex-direction:column; gap:14px; min-height:0; flex:1;}
+  .center-col{display:flex; flex-direction:column; gap:14px; min-height:0;}
   .meta-row{display:flex; align-items:center; justify-content:space-between; padding:0 6px;}
   .q-progress{font-weight:800; color:var(--gray-300); font-size:14px;}
   .q-category{
@@ -238,7 +207,7 @@
   .timer-wrap{position:relative; width:64px; height:64px;}
   .timer-wrap svg{transform:rotate(-90deg);}
   .timer-wrap .ring-bg{fill:none; stroke:rgba(255,255,255,0.12); stroke-width:6;}
-  .timer-wrap .ring-fg{fill:none; stroke:var(--gold); stroke-width:6; stroke-dasharray: 169.64; stroke-dashoffset: 0; stroke-linecap:round; transition:stroke-dashoffset .1s linear, stroke .2s ease;}
+  .timer-wrap .ring-fg{fill:none; stroke:var(--gold); stroke-width:6; stroke-linecap:round; transition:stroke-dashoffset .1s linear, stroke .2s ease;}
   .timer-wrap .ring-fg.warn{stroke:var(--red);}
   .timer-wrap .tnum{
     position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
@@ -250,17 +219,13 @@
     background:linear-gradient(180deg, rgba(21,54,98,0.55), rgba(15,39,74,0.68));
     border:1px solid rgba(255,255,255,0.08);
     border-radius:22px; padding:28px 34px;
-    animation:qIn .38s ease;
   }
-  @keyframes qIn{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
   .q-text{
     font-family:'Baloo 2',sans-serif; font-weight:700;
     font-size:clamp(22px,2.4vw,32px); text-align:center; line-height:1.3;
     margin-bottom:26px;
   }
-  .options-grid{
-    display:grid; grid-template-columns:1fr 1fr; gap:16px;
-  }
+  .options-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
   .opt-btn{
     display:flex; align-items:center; gap:14px;
     background:rgba(255,255,255,0.06);
@@ -278,34 +243,28 @@
   .opt-text{font-size:17px; font-weight:700; color:var(--white);}
   .opt-btn.picked-mine{border-color:var(--gold); background:rgba(242,183,5,0.14);}
   .opt-btn.picked-mine .opt-badge{background:var(--gold); color:var(--navy-900);}
-  .opt-btn.reveal-correct{border-color:var(--green); background:rgba(47,174,96,0.2);}
-  .opt-btn.reveal-correct .opt-badge{background:var(--green); color:var(--white);}
-  .opt-btn.reveal-wrong-mine{border-color:var(--red); background:rgba(214,69,65,0.18);}
   .status-line{
     text-align:center; margin-top:16px; font-weight:800; color:var(--gray-300); font-size:14px; min-height:18px;
   }
 
-  /* ---------- Result ---------- */
-  #screen-result .result-trophy{font-size:70px; margin-bottom:6px; animation:bounce .9s ease;}
-  @keyframes bounce{
-    0%{transform:translateY(-30px) scale(0.7); opacity:0;}
-    60%{transform:translateY(6px) scale(1.05); opacity:1;}
-    100%{transform:translateY(0) scale(1);}
+  #screen-result .result-trophy{font-size:70px; margin-bottom:6px;}
+  .result-line{
+    display:flex; align-items:center; gap:18px; justify-content:center; margin:18px 0 8px; flex-wrap:wrap;
   }
-  .rank-list{display:flex; flex-direction:column; gap:12px; margin:22px 0 8px;}
-  .rank-row{
-    display:flex; align-items:center; gap:14px;
-    background:rgba(255,255,255,0.05); border:2px solid rgba(255,255,255,0.1);
-    border-radius:16px; padding:14px 20px;
-  }
-  .rank-row.gold{border-color:var(--gold); background:rgba(242,183,5,0.12);}
-  .rank-row .rmedal{font-size:26px; width:34px; text-align:center; flex-shrink:0;}
-  .rank-row .rname{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:18px; flex:1; text-align:left; word-break:break-word;}
-  .rank-row .rscore{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:26px; flex-shrink:0;}
+  .result-team{text-align:center;}
+  .result-team .rn{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:16px; color:var(--gray-300); word-break:break-word; max-width:150px;}
+  .result-team .rs{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:42px;}
+  .result-dash{font-family:'Baloo 2',sans-serif; font-size:28px; color:var(--gray-500); font-weight:800;}
+  #result-headline{text-align:center;}
 
   @media (max-width:900px){
-    .score-row{grid-template-columns:1fr;}
-    .score-panel .sp-score{font-size:28px;}
+    .game-layout{grid-template-columns:1fr; grid-template-rows:auto auto 1fr;}
+    .rivals-col{flex-direction:row;}
+    .score-panel{flex-direction:row; justify-content:space-between; padding:14px 20px;}
+    .score-panel.rival{flex-direction:row; justify-content:space-between;}
+    .score-panel .sp-name{margin:0;}
+    .score-panel .sp-score{font-size:32px;}
+    .score-panel.rival .sp-score{font-size:26px;}
     .options-grid{grid-template-columns:1fr;}
   }
 </style>
@@ -314,7 +273,6 @@
 <div id="app">
 
   <div id="topbar">
-    <div style="font-size: 32px;">🎓</div>
     <div class="brand-text">
       <span class="club">ÇFK</span>
       <span class="sub">Genel Kültür Yarışması</span>
@@ -323,12 +281,10 @@
     <div id="room-badge">ODA KODU <b id="room-badge-code">----</b></div>
   </div>
 
-  <!-- HOME SCREEN -->
   <div class="screen active" id="screen-home">
     <div class="card" style="max-width:560px; width:100%;">
-      <div id="home-logo-placeholder">🏆</div>
-      <h1 class="title">Hazır mısınız?</h1>
-      <p class="lead">Sınıfını seç, iki rakip sınıfla yarış, en yüksek puanı topla!</p>
+      <h1 class="title">Hazır mısınız? 🏆</h1>
+      <p class="lead">Sınıfını seç, 2 rakiple yarış, en yüksek puanı topla!</p>
 
       <div class="choice-row" id="home-choices">
         <div class="choice-card" id="choice-create">
@@ -345,35 +301,34 @@
 
       <div class="form-panel" id="panel-create">
         <div class="field">
-          <label>Sınıfınızın Adı</label>
+          <label>Sınıfınızın adı</label>
           <input type="text" id="create-name" maxlength="24" placeholder="Örn: 5-A Sınıfı">
         </div>
         <div class="error-msg" id="create-error"></div>
         <button class="btn btn-primary btn-block" id="create-submit">Oda Oluştur</button>
-        <button class="back-link" data-back>← Geri dön</button>
+        <button class="back-link" data-back="1">← Geri dön</button>
       </div>
 
       <div class="form-panel" id="panel-join">
         <div class="field">
-          <label>Oda Kodu</label>
+          <label>Oda kodu</label>
           <input type="text" id="join-code" class="code-input" maxlength="4" placeholder="0000" inputmode="numeric">
         </div>
         <div class="field">
-          <label>Sınıfınızın Adı</label>
+          <label>Sınıfınızın adı</label>
           <input type="text" id="join-name" maxlength="24" placeholder="Örn: 5-B Sınıfı">
         </div>
         <div class="error-msg" id="join-error"></div>
         <button class="btn btn-primary btn-block" id="join-submit">Odaya Katıl</button>
-        <button class="back-link" data-back>← Geri dön</button>
+        <button class="back-link" data-back="1">← Geri dön</button>
       </div>
     </div>
   </div>
 
-  <!-- LOBBY SCREEN -->
   <div class="screen" id="screen-lobby">
-    <div class="card" style="max-width:720px; width:100%; position:relative;">
+    <div class="card" style="max-width:760px; width:100%; position:relative;">
       <div class="lobby-code">
-        <div class="cap">ODA KODU — Diğer sınıflara bu kodu verin</div>
+        <div class="cap">ODA KODU — Diğer sınıflara bu kodu söyleyin</div>
         <div class="val" id="lobby-code-val">----</div>
       </div>
       <div class="lobby-teams">
@@ -382,19 +337,19 @@
           <div class="tstatus waiting" id="lobby-team1-status">Bekleniyor</div>
         </div>
         <div class="vs-badge">VS</div>
-        <div class="team-slot empty" id="lobby-team2">
-          <div class="tname" id="lobby-team2-name">Sınıf bekleniyor...</div>
-          <div class="tstatus waiting" id="lobby-team2-status">—</div>
+        <div class="team-slot" id="lobby-team2">
+          <div class="tname" id="lobby-team2-name">Rakip bekleniyor...</div>
+          <div class="tstatus waiting" id="lobby-team2-status">Bekleniyor</div>
         </div>
         <div class="vs-badge">VS</div>
-        <div class="team-slot empty" id="lobby-team3">
-          <div class="tname" id="lobby-team3-name">Sınıf bekleniyor...</div>
-          <div class="tstatus waiting" id="lobby-team3-status">—</div>
+        <div class="team-slot" id="lobby-team3">
+          <div class="tname" id="lobby-team3-name">Rakip bekleniyor...</div>
+          <div class="tstatus waiting" id="lobby-team3-status">Bekleniyor</div>
         </div>
       </div>
       <div style="text-align:center;">
         <button class="btn btn-primary" id="lobby-ready-btn">Hazırız! ✅</button>
-        <div class="status-line" id="lobby-hint">Diğer sınıfların katılmasını veya hazır olmasını bekleyin.</div>
+        <div class="status-line" id="lobby-hint">Diğer sınıfların katılmasını bekleyin.</div>
       </div>
 
       <div class="countdown-overlay" id="countdown-overlay">
@@ -404,36 +359,17 @@
     </div>
   </div>
 
-  <!-- GAME SCREEN -->
   <div class="screen" id="screen-game">
     <div class="game-layout">
-      <div class="score-row">
-        <div class="score-panel mine" id="panel-slot0">
-          <div class="sp-info">
-            <div class="sp-cap" id="slot0-cap">1. SINIF</div>
-            <div class="sp-name" id="slot0-name">—</div>
-          </div>
-          <div class="sp-score" id="slot0-score">0</div>
-        </div>
-        <div class="score-panel rival" id="panel-slot1">
-          <div class="sp-info">
-            <div class="sp-cap" id="slot1-cap">2. SINIF</div>
-            <div class="sp-name" id="slot1-name">—</div>
-          </div>
-          <div class="sp-score" id="slot1-score">0</div>
-        </div>
-        <div class="score-panel rival" id="panel-slot2">
-          <div class="sp-info">
-            <div class="sp-cap" id="slot2-cap">3. SINIF</div>
-            <div class="sp-name" id="slot2-name">—</div>
-          </div>
-          <div class="sp-score" id="slot2-score">0</div>
-        </div>
+      <div class="score-panel mine" id="panel-mine">
+        <div class="sp-cap">SINIFIMIZ</div>
+        <div class="sp-name" id="mine-name">—</div>
+        <div class="sp-score" id="mine-score">0</div>
       </div>
 
       <div class="center-col">
         <div class="meta-row">
-          <div class="q-progress" id="q-progress">Soru 1/15</div>
+          <div class="q-progress" id="q-progress">Soru 1/35</div>
           <div class="q-category" id="q-category">Genel Kültür</div>
           <div class="timer-wrap">
             <svg width="64" height="64" viewBox="0 0 64 64">
@@ -449,434 +385,533 @@
           <div class="status-line" id="game-status-line"></div>
         </div>
       </div>
+
+      <div class="rivals-col">
+        <div class="score-panel rival" id="panel-rival1">
+          <div class="sp-cap">RAKİP SINIF</div>
+          <div class="sp-name" id="rival1-name">—</div>
+          <div class="sp-score" id="rival1-score">0</div>
+        </div>
+        <div class="score-panel rival" id="panel-rival2">
+          <div class="sp-cap">RAKİP SINIF</div>
+          <div class="sp-name" id="rival2-name">—</div>
+          <div class="sp-score" id="rival2-score">0</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- RESULT SCREEN -->
   <div class="screen" id="screen-result">
-    <div class="card" style="max-width:560px; width:100%; text-align:center;">
+    <div class="card" style="max-width:680px; width:100%; text-align:center;">
       <div class="result-trophy">🏆</div>
       <h1 class="title" id="result-headline">Tebrikler!</h1>
-      <div class="rank-list" id="rank-list"></div>
-      <p class="lead" style="margin-top:10px;">Harika bir yarışmaydı!</p>
+      <div class="result-line">
+        <div class="result-team">
+          <div class="rn" id="result-name1">Sınıf 1</div>
+          <div class="rs" id="result-score1">0</div>
+        </div>
+        <div class="result-dash">—</div>
+        <div class="result-team">
+          <div class="rn" id="result-name2">Sınıf 2</div>
+          <div class="rs" id="result-score2">0</div>
+        </div>
+        <div class="result-dash">—</div>
+        <div class="result-team">
+          <div class="rn" id="result-name3">Sınıf 3</div>
+          <div class="rs" id="result-score3">0</div>
+        </div>
+      </div>
+      <p class="lead" style="margin-top:18px;">Harika bir yarışmaydı!</p>
       <button class="btn btn-primary" id="result-newgame">Yeni Oyun</button>
     </div>
   </div>
 
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
 <script>
-/* =========================================================================
-   ÇFK GENEL KÜLTÜR YARIŞMASI - TAM İŞLEVSEL YEREL & ÇEVRİMİÇİ YARIŞMA ENGINE
-   ========================================================================= */
-
-// 1) SORU VERİ SETİ (15 Soru)
-const QUESTION_BANK = [
-  {
-    category: "Tarih",
-    question: "Türkiye Cumhuriyeti'nin kurucusu ve ilk Cumhurbaşkanı kimdir?",
-    options: ["İsmet İnönü", "Mustafa Kemal Atatürk", "Fevzi Çakmak", "Kazım Karabekir"],
-    answer: 1
-  },
-  {
-    category: "Coğrafya",
-    question: "Türkiye'nin başkenti hangi ilimizdir?",
-    options: ["İstanbul", "İzmir", "Ankara", "Bursa"],
-    answer: 2
-  },
-  {
-    category: "Bilim",
-    question: "Güneş Sistemimizdeki en büyük gezegen hangisidir?",
-    options: ["Mars", "Jüpiter", "Satürn", "Dünya"],
-    answer: 1
-  },
-  {
-    category: "Genel Kültür",
-    question: "İstiklal Marşımızın şairi kimdir?",
-    options: ["Mehmet Akif Ersoy", "Yahya Kemal Beyatlı", "Ziya Gökalp", "Namık Kemal"],
-    answer: 0
-  },
-  {
-    category: "Coğrafya",
-    question: "Dünyanın en uzun nehri kabul edilen Nil Nehri hangi kıtadadır?",
-    options: ["Asya", "Avrupa", "Afrika", "Amerika"],
-    answer: 2
-  },
-  {
-    category: "Edebiyat",
-    question: "Dünyaca ünlü 'Sefiller' romanının yazarı kimdir?",
-    options: ["Victor Hugo", "Émile Zola", "Charles Dickens", "Lev Tolstoy"],
-    answer: 0
-  },
-  {
-    category: "Tarih",
-    question: "İstanbul hangi yılda Fatih Sultan Mehmet tarafından fethedilmiştir?",
-    options: ["1071", "1299", "1453", "1923"],
-    answer: 2
-  },
-  {
-    category: "Sanat",
-    question: "Dünyaca ünlü 'Mona Lisa' tablosunun ressamı kimdir?",
-    options: ["Pablo Picasso", "Leonardo da Vinci", "Vincent van Gogh", "Salvador Dalí"],
-    answer: 1
-  },
-  {
-    category: "Sporsal Kültür",
-    question: "Olimpiyat halkalarında kaç adet renkli halka bulunur?",
-    options: ["4", "5", "6", "7"],
-    answer: 1
-  },
-  {
-    category: "Bilim",
-    question: "Suyun kimyasal sembolü aşağıdakilerden hangisidir?",
-    options: ["CO2", "H2O", "NaCl", "O2"],
-    answer: 1
-  },
-  {
-    category: "Coğrafya",
-    question: "Yüzölçümü bakımından Türkiye'nin en büyük coğrafi bölgesi hangisidir?",
-    options: ["Marmara Bölgesi", "İç Anadolu Bölgesi", "Doğu Anadolu Bölgesi", "Karadeniz Bölgesi"],
-    answer: 2
-  },
-  {
-    category: "Genel Kültür",
-    question: "Türk bayrağındaki ay ve yıldızın rengi nedir?",
-    options: ["Sarı", "Kırmızı", "Beyaz", "Mavi"],
-    answer: 2
-  },
-  {
-    category: "Tarih",
-    question: "Anadolu'nun kapılarını Türklere açan Malazgirt Meydan Muharebesi hangi yılda yapılmıştır?",
-    options: ["1071", "1176", "1243", "1402"],
-    answer: 0
-  },
-  {
-    category: "Müzik",
-    question: "Klasik müzikte '4. Senfoni' ve '5. Senfoni' gibi dev eserleriyle tanınan işitme engelli besteci kimdir?",
-    options: ["Mozart", "Beethoven", "Bach", "Vivaldi"],
-    answer: 1
-  },
-  {
-    category: "Coğrafya",
-    question: "Dünyanın en derin noktası kabul edilen 'Mariana Çukuru' hangi okyanustadır?",
-    options: ["Atlas Okyanusu", "Hint Okyanusu", "Büyük Okyanus (Pasifik)", "Kuzey Buz Okyanusu"],
-    answer: 2
-  }
-];
-
-// OYUN DURUMU (STATE)
-let gameState = {
-  roomCode: "",
-  myTeamName: "",
-  myTeamIndex: 0,
-  teams: [],
-  currentQuestionIndex: 0,
-  scores: [0, 0, 0],
-  selectedOption: null,
-  timer: 20,
-  timerInterval: null
+const firebaseConfig = {
+  apiKey: "AIzaSyA9Lk5ac3TrXhNmA5EZCAaE_JAopjAlfxA",
+  authDomain: "genelkultur-43f16.firebaseapp.com",
+  projectId: "genelkultur-43f16",
+  storageBucket: "genelkultur-43f16.firebasestorage.app",
+  messagingSenderId: "936905663069",
+  appId: "1:936905663069:web:ebf12a7be5d255c950e3b4",
+  measurementId: "G-LJTNJ7M3DP"
 };
 
-// EKRAN YÖNETİMİ
-function showScreen(screenId) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(screenId).classList.add('active');
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+const db = firebase.database();
+
+const QUESTION_BANK = [
+  // Genel Kültür (5 Soru)
+  { id: 1, category: "Genel Kültür", question: "Dünyanın en uzun nehri hangisidir?", options: ["Amazon", "Nil", "Fırat", "Tuna"], answer: 1 },
+  { id: 2, category: "Genel Kültür", question: "İstiklal Marşı'mızın şairi kimdir?", options: ["Mehmet Âkif Ersoy", "Yahya Kemal", "Ziya Gökalp", "Namık Kemal"], answer: 0 },
+  { id: 3, category: "Genel Kültür", question: "Mona Lisa tablosu kime aittir?", options: ["Pablo Picasso", "Leonardo da Vinci", "Vincent van Gogh", "Salvador Dalí"], answer: 1 },
+  { id: 4, category: "Genel Kültür", question: "Pusulanın ana yönü N harfi ile gösterilen hangisidir?", options: ["Güney", "Kuzey", "Doğu", "Batı"], answer: 1 },
+  { id: 5, category: "Genel Kültür", question: "Olimpiyat halkalarında kaç renk bulunur?", options: ["4", "5", "6", "7"], answer: 1 },
+
+  // Dünya (5 Soru)
+  { id: 6, category: "Dünya", question: "Yüzölçümü bakımından dünyanın en büyük ülkesi hangisidir?", options: ["Çin", "Kanada", "ABD", "Rusya"], answer: 3 },
+  { id: 7, category: "Dünya", question: "Dünyanın en büyük okyanusu hangisidir?", options: ["Atlas Okyanusu", "Hint Okyanusu", "Büyük Okyanus (Pasifik)", "Arktik Okyanusu"], answer: 2 },
+  { id: 8, category: "Dünya", question: "Yüzölçümü en büyük kıta hangisidir?", options: ["Afrika", "Avrupa", "Asya", "Amerika"], answer: 2 },
+  { id: 9, category: "Dünya", question: "İtalya'nın başkenti neresidir?", options: ["Milano", "Venedik", "Roma", "Napoli"], answer: 2 },
+  { id: 10, category: "Dünya", question: "Eyfel Kulesi hangi şehirde yer alır?", options: ["Londra", "Paris", "Berlin", "Madrid"], answer: 1 },
+
+  // Güncel Bilgi (5 Soru)
+  { id: 11, category: "Güncel Bilgi", question: "Türkiye'nin ilk yerli ve millî otomobil markası hangisidir?", options: ["Devrim", "TOGG", "Anadol", "Şahin"], answer: 1 },
+  { id: 12, category: "Güncel Bilgi", question: "Uzaya giden ilk Türk astronot kimdir?", options: ["Alper Gezeravcı", "Tuva Cihangir Atasever", "Umut Yıldız", "Ali Kuşçu"], answer: 0 },
+  { id: 13, category: "Güncel Bilgi", question: "EURO 2024 Avrupa Futbol Şampiyonası hangi ülkede düzenlenmiştir?", options: ["Fransa", "İngiltere", "Almanya", "İspanya"], answer: 2 },
+  { id: 14, category: "Güncel Bilgi", question: "Birleşmiş Milletler (BM) Genel Merkezi hangi şehirdedir?", options: ["Cenevre", "New York", "Brüksel", "Pekin"], answer: 1 },
+  { id: 15, category: "Güncel Bilgi", question: "Türkiye'nin ilk insansız savaş uçağı projesinin adı nedir?", options: ["BAYRAKTAR TB2", "ANKA", "KAAN", "KIZILELMA"], answer: 3 },
+
+  // İngilizce Bilmece (5 Soru)
+  { id: 16, category: "İngilizce Bilmece", question: "I have hands, but I cannot clap. What am I?", options: ["A clock", "A chair", "A tree", "A book"], answer: 0 },
+  { id: 17, category: "İngilizce Bilmece", question: "What has to be broken before you can use it?", options: ["A glass", "An egg", "A phone", "A door"], answer: 1 },
+  { id: 18, category: "İngilizce Bilmece", question: "I speak without a mouth and hear without ears. What am I?", options: ["An echo", "A shadow", "A cloud", "A wind"], answer: 0 },
+  { id: 19, category: "İngilizce Bilmece", question: "What goes up but never comes down?", options: ["A balloon", "Your age", "A plane", "The rain"], answer: 1 },
+  { id: 20, category: "İngilizce Bilmece", question: "What has many keys but can't open a single lock?", options: ["A map", "A piano", "A box", "A house"], answer: 1 },
+
+  // Uzay ve Evren (5 Soru)
+  { id: 21, category: "Uzay ve Evren", question: "Güneş Sistemimizdeki en büyük gezegen hangisidir?", options: ["Mars", "Venüs", "Jüpiter", "Satürn"], answer: 2 },
+  { id: 22, category: "Uzay ve Evren", question: "Halkalarıyla ünlü olan gezegen hangisidir?", options: ["Satürn", "Uranüs", "Neptün", "Mars"], answer: 0 },
+  { id: 23, category: "Uzay ve Evren", question: "'Kızıl Gezegen' olarak bilinen gezegen hangisidir?", options: ["Venüs", "Mars", "Merkür", "Jüpiter"], answer: 1 },
+  { id: 24, category: "Uzay ve Evren", question: "Dünya'nın tek doğal uydusu nedir?", options: ["Güneş", "Titan", "Ay", "Phobos"], answer: 2 },
+  { id: 25, category: "Uzay ve Evren", question: "Güneş'e en yakın gezegen hangisidir?", options: ["Merkür", "Venüs", "Dünya", "Mars"], answer: 0 },
+
+  // Matematik (5 Soru)
+  { id: 26, category: "Matematik", question: "Bir dik üçgende en uzun kenara ne ad verilir?", options: ["Dik kenar", "Taban", "Hipotenüs", "Yükseklik"], answer: 2 },
+  { id: 27, category: "Matematik", question: "En küçük asal sayı kaçtır?", options: ["0", "1", "2", "3"], answer: 2 },
+  { id: 28, category: "Matematik", question: "Çemberin çevresini bulmak için kullanılan sabit sayı hangisidir?", options: ["Altın Oran", "Pi Sayısı", "Euler Sayısı", "Kök 2"], answer: 1 },
+  { id: 29, category: "Matematik", question: "İç açıları toplamı 180 derece olan geometrik şekil hangisidir?", options: ["Kare", "Dikdörtgen", "Üçgen", "Beşgen"], answer: 2 },
+  { id: 30, category: "Matematik", question: "8'in küpü (8³) kaçtır?", options: ["64", "256", "512", "1024"], answer: 2 },
+
+  // Eskişehir (5 Soru)
+  { id: 31, category: "Eskişehir", question: "Eskişehir içinden geçen ve şehre hayat veren ünlü nehir hangisidir?", options: ["Kızılırmak", "Yeşilırmak", "Porsuk Çayı", "Sakarya Nehrı"], answer: 2 },
+  { id: 32, category: "Eskişehir", question: "Eskişehir ile özdeşleşen, beyaz renkli ve işlemesiyle ünlü değerli taş hangisidir?", options: ["Oltu Taşı", "Lüle Taşı", "Kehribar", "Zümrüt"], answer: 1 },
+  { id: 33, category: "Eskişehir", question: "Eskişehir'in tarihi evleriyle ünlü turistik semti neresidir?", options: ["Odunpazarı", "Tepebaşı", "Bağlar", "İnönü"], answer: 0 },
+  { id: 34, category: "Eskişehir", question: "Eskişehir'e özgü olan, kıymalı harçla yapılıp yağda kızartılan ünlü lezzet hangisidir?", options: ["Mantı", "Çibörek", "Gözleme", "Pide"], answer: 1 },
+  { id: 35, category: "Eskişehir", question: "1961 yılında Eskişehir Demiryolu Fabrikası'nda üretilen ilk Türk otomobili hangisidir?", options: ["Devrim", "Anadol", "Murat 124", "Toros"], answer: 0 }
+];
+
+const ROLES = ['host', 'guest1', 'guest2'];
+
+let currentRoomCode = null;
+let myRole = null;
+let myTeamName = "";
+let roomRef = null;
+let timerInterval = null;
+let isAnsweredCurrentQ = false;
+const QUESTION_TIME = 20;
+
+const screens = {
+  home: document.getElementById('screen-home'),
+  lobby: document.getElementById('screen-lobby'),
+  game: document.getElementById('screen-game'),
+  result: document.getElementById('screen-result')
+};
+
+function showScreen(screenName) {
+  Object.keys(screens).forEach(s => screens[s].classList.remove('active'));
+  screens[screenName].classList.add('active');
 }
 
-// HOME EKRANI ETKİLEŞİMLERİ
-document.getElementById('choice-create').addEventListener('click', () => {
+function getOtherRoles(role) {
+  return ROLES.filter(function(r) { return r !== role; });
+}
+
+document.getElementById('choice-create').addEventListener('click', function() {
   document.getElementById('home-choices').style.display = 'none';
   document.getElementById('panel-create').classList.add('active');
 });
 
-document.getElementById('choice-join').addEventListener('click', () => {
+document.getElementById('choice-join').addEventListener('click', function() {
   document.getElementById('home-choices').style.display = 'none';
   document.getElementById('panel-join').classList.add('active');
 });
 
-document.querySelectorAll('[data-back]').forEach(btn => {
-  btn.addEventListener('click', () => {
+const backButtons = document.querySelectorAll('[data-back]');
+for (let i = 0; i < backButtons.length; i++) {
+  backButtons[i].addEventListener('click', function() {
     document.getElementById('panel-create').classList.remove('active');
     document.getElementById('panel-join').classList.remove('active');
     document.getElementById('home-choices').style.display = 'flex';
+    document.getElementById('create-error').style.display = 'none';
+    document.getElementById('join-error').style.display = 'none';
   });
-});
+}
 
-// ODA OLUŞTURMA
-document.getElementById('create-submit').addEventListener('click', () => {
+document.getElementById('create-submit').addEventListener('click', async function() {
   const nameInput = document.getElementById('create-name').value.trim();
   const errDiv = document.getElementById('create-error');
-  
   if(!nameInput) {
-    errDiv.textContent = "Lütfen sınıfınızın adını girin.";
+    errDiv.textContent = "Lütfen bir sınıf adı girin.";
     errDiv.style.display = "block";
     return;
   }
-  errDiv.style.display = "none";
 
-  gameState.roomCode = Math.floor(1000 + Math.random() * 9000).toString();
-  gameState.myTeamName = nameInput;
-  gameState.myTeamIndex = 0;
-  gameState.teams = [
-    { name: nameInput, ready: true },
-    { name: "5-B Sınıfı (Bot)", ready: true },
-    { name: "5-C Sınıfı (Bot)", ready: true }
-  ];
+  myTeamName = nameInput;
+  myRole = 'host';
+  currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
+  roomRef = db.ref('rooms/' + currentRoomCode);
 
-  initLobby();
+  const initialData = {
+    code: currentRoomCode,
+    status: 'lobby',
+    host: { name: myTeamName, ready: false, score: 0, answer: -1 },
+    guest1: { name: "", ready: false, score: 0, answer: -1 },
+    guest2: { name: "", ready: false, score: 0, answer: -1 },
+    currentQ: 0,
+    qStartTime: 0
+  };
+
+  await roomRef.set(initialData);
+  setupLobbyListeners();
+  enterLobby();
 });
 
-// ODAYA KATILMA
-document.getElementById('join-submit').addEventListener('click', () => {
+document.getElementById('join-submit').addEventListener('click', async function() {
   const codeInput = document.getElementById('join-code').value.trim();
   const nameInput = document.getElementById('join-name').value.trim();
   const errDiv = document.getElementById('join-error');
 
-  if(codeInput.length !== 4) {
-    errDiv.textContent = "4 haneli oda kodunu girin.";
+  if(codeInput.length !== 4 || !nameInput) {
+    errDiv.textContent = "Lütfen 4 haneli kod ve sınıf adını eksiksiz girin.";
     errDiv.style.display = "block";
     return;
   }
-  if(!nameInput) {
-    errDiv.textContent = "Lütfen sınıfınızın adını girin.";
+
+  currentRoomCode = codeInput;
+  roomRef = db.ref('rooms/' + currentRoomCode);
+  const snap = await roomRef.once('value');
+
+  if(!snap.exists()) {
+    errDiv.textContent = "Oda bulunamadı! Kodu kontrol edin.";
     errDiv.style.display = "block";
     return;
   }
-  errDiv.style.display = "none";
 
-  gameState.roomCode = codeInput;
-  gameState.myTeamName = nameInput;
-  gameState.myTeamIndex = 1;
-  gameState.teams = [
-    { name: "5-A Sınıfı (Ev Sahibi)", ready: true },
-    { name: nameInput, ready: true },
-    { name: "5-C Sınıfı (Bot)", ready: true }
-  ];
-
-  initLobby();
-});
-
-// LOBİ HAZIRLIĞI
-function initLobby() {
-  document.getElementById('room-badge').style.display = 'flex';
-  document.getElementById('room-badge-code').textContent = gameState.roomCode;
-  document.getElementById('lobby-code-val').textContent = gameState.roomCode;
-
-  for(let i = 0; i < 3; i++) {
-    const slot = document.getElementById(`lobby-team${i+1}`);
-    const nameEl = document.getElementById(`lobby-team${i+1}-name`);
-    const statusEl = document.getElementById(`lobby-team${i+1}-status`);
-    
-    if(gameState.teams[i]) {
-      slot.classList.remove('empty');
-      nameEl.textContent = gameState.teams[i].name;
-      statusEl.textContent = "Hazır ✅";
-      statusEl.className = "tstatus ready";
-      if(i === gameState.myTeamIndex) {
-        slot.classList.add('me');
-      }
-    }
-  }
-
-  showScreen('screen-lobby');
-}
-
-// LOBİ HAZIR BUTONU & GERİ SAYIM
-document.getElementById('lobby-ready-btn').addEventListener('click', () => {
-  const overlay = document.getElementById('countdown-overlay');
-  const numEl = document.getElementById('countdown-num');
-  overlay.classList.add('active');
-  
-  let count = 3;
-  numEl.textContent = count;
-  
-  const timer = setInterval(() => {
-    count--;
-    if(count > 0) {
-      numEl.textContent = count;
-    } else {
-      clearInterval(timer);
-      overlay.classList.remove('active');
-      startGame();
-    }
-  }, 1000);
-});
-
-// OYUNU BAŞLATMA
-function startGame() {
-  gameState.currentQuestionIndex = 0;
-  gameState.scores = [0, 0, 0];
-  
-  for(let i = 0; i < 3; i++) {
-    document.getElementById(`slot${i}-name`).textContent = gameState.teams[i].name;
-    document.getElementById(`slot${i}-score`).textContent = "0";
-  }
-
-  showScreen('screen-game');
-  loadQuestion();
-}
-
-// SORU YÜKLEME
-function loadQuestion() {
-  if(gameState.currentQuestionIndex >= QUESTION_BANK.length) {
-    showResults();
+  const roomData = snap.val();
+  if(roomData.status !== 'lobby') {
+    errDiv.textContent = "Oda dolu veya yarışma zaten başladı.";
+    errDiv.style.display = "block";
     return;
   }
 
-  const q = QUESTION_BANK[gameState.currentQuestionIndex];
-  gameState.selectedOption = null;
-  gameState.timer = 20;
+  let targetSlot = null;
+  if(!roomData.guest1 || !roomData.guest1.name) {
+    targetSlot = 'guest1';
+  } else if(!roomData.guest2 || !roomData.guest2.name) {
+    targetSlot = 'guest2';
+  }
 
-  document.getElementById('q-progress').textContent = `Soru ${gameState.currentQuestionIndex + 1}/${QUESTION_BANK.length}`;
-  document.getElementById('q-category').textContent = q.category;
-  document.getElementById('q-text').textContent = q.question;
-  document.getElementById('game-status-line').textContent = "Cevabınızı seçin...";
+  if(!targetSlot) {
+    errDiv.textContent = "Oda dolu! (3 sınıf zaten katıldı)";
+    errDiv.style.display = "block";
+    return;
+  }
 
-  const grid = document.getElementById('options-grid');
-  grid.innerHTML = '';
+  myTeamName = nameInput;
+  myRole = targetSlot;
 
-  const badges = ['A', 'B', 'C', 'D'];
-  q.options.forEach((optText, index) => {
-    const btn = document.createElement('button');
-    btn.className = 'opt-btn';
-    btn.innerHTML = `
-      <div class="opt-badge">${badges[index]}</div>
-      <div class="opt-text">${optText}</div>
-    `;
-    btn.addEventListener('click', () => selectOption(index));
-    grid.appendChild(btn);
+  await roomRef.child(myRole).update({
+    name: myTeamName,
+    ready: false,
+    score: 0,
+    answer: -1
   });
 
-  resetTimerRing();
-  startTimer();
+  setupLobbyListeners();
+  enterLobby();
+});
+
+function enterLobby() {
+  showScreen('lobby');
+  document.getElementById('room-badge').style.display = 'flex';
+  document.getElementById('room-badge-code').textContent = currentRoomCode;
+  document.getElementById('lobby-code-val').textContent = currentRoomCode;
 }
 
-// ZAMANLAYICI
-function startTimer() {
-  clearInterval(gameState.timerInterval);
-  const ringFg = document.getElementById('ring-fg');
+function updateSlotUI(elId, roleData, isMe, defaultText) {
+  const slotEl = document.getElementById(elId);
+  const nameEl = document.getElementById(elId + '-name');
+  const statusEl = document.getElementById(elId + '-status');
+
+  if(roleData && roleData.name) {
+    nameEl.textContent = roleData.name;
+    statusEl.textContent = roleData.ready ? "HAZIR" : "Bekleniyor";
+    statusEl.className = "tstatus " + (roleData.ready ? "ready" : "waiting");
+  } else {
+    nameEl.textContent = defaultText;
+    statusEl.textContent = "Bekleniyor";
+    statusEl.className = "tstatus waiting";
+  }
+
+  if(isMe) {
+    slotEl.classList.add('me');
+  } else {
+    slotEl.classList.remove('me');
+  }
+}
+
+function setupLobbyListeners() {
+  roomRef.on('value', function(snap) {
+    const data = snap.val();
+    if(!data) return;
+
+    updateSlotUI('lobby-team1', data.host, myRole === 'host', "Bekleniyor");
+    updateSlotUI('lobby-team2', data.guest1, myRole === 'guest1', "Rakip bekleniyor...");
+    updateSlotUI('lobby-team3', data.guest2, myRole === 'guest2', "Rakip bekleniyor...");
+
+    const allJoined = data.host && data.host.name && data.guest1 && data.guest1.name && data.guest2 && data.guest2.name;
+    const allReady = allJoined && data.host.ready && data.guest1.ready && data.guest2.ready;
+
+    if(allReady && data.status === 'lobby') {
+      if(myRole === 'host') {
+        roomRef.update({ status: 'starting' });
+        startCountdown();
+      }
+    }
+
+    if(data.status === 'starting') {
+      startCountdown();
+    }
+
+    if(data.status === 'playing' && screens.lobby.classList.contains('active')) {
+      startGameScreen();
+    }
+  });
+}
+
+document.getElementById('lobby-ready-btn').addEventListener('click', function() {
+  roomRef.child(myRole).update({ ready: true });
+  document.getElementById('lobby-ready-btn').disabled = true;
+  document.getElementById('lobby-hint').textContent = "Diğer sınıfların hazır olması bekleniyor...";
+});
+
+let countdownStarted = false;
+function startCountdown() {
+  if(countdownStarted) return;
+  countdownStarted = true;
+  const overlay = document.getElementById('countdown-overlay');
+  const numDiv = document.getElementById('countdown-num');
+  overlay.classList.add('active');
+
+  let count = 3;
+  numDiv.textContent = count;
+
+  const cdInterval = setInterval(function() {
+    count--;
+    if(count > 0) {
+      numDiv.textContent = count;
+    } else {
+      clearInterval(cdInterval);
+      if(myRole === 'host') {
+        roomRef.update({
+          status: 'playing',
+          currentQ: 0,
+          qStartTime: Date.now()
+        });
+      }
+    }
+  }, 1000);
+}
+
+function startGameScreen() {
+  showScreen('game');
+  setupGameListeners();
+}
+
+function setupGameListeners() {
+  roomRef.on('value', function(snap) {
+    const data = snap.val();
+    if(!data || data.status !== 'playing') {
+      if(data && data.status === 'finished') {
+        showResults(data);
+      }
+      return;
+    }
+
+    const myData = data[myRole];
+    const otherRoles = getOtherRoles(myRole);
+    const rival1Data = data[otherRoles[0]];
+    const rival2Data = data[otherRoles[1]];
+
+    document.getElementById('mine-name').textContent = myData.name;
+    document.getElementById('mine-score').textContent = myData.score;
+    document.getElementById('rival1-name').textContent = rival1Data.name;
+    document.getElementById('rival1-score').textContent = rival1Data.score;
+    document.getElementById('rival2-name').textContent = rival2Data.name;
+    document.getElementById('rival2-score').textContent = rival2Data.score;
+
+    const qIndex = data.currentQ;
+    if(qIndex >= QUESTION_BANK.length) {
+      if(myRole === 'host') roomRef.update({ status: 'finished' });
+      return;
+    }
+
+    renderQuestion(qIndex, data);
+  });
+}
+
+let activeQIndex = -1;
+
+function renderQuestion(qIndex, data) {
+  const question = QUESTION_BANK[qIndex];
+
+  if(activeQIndex !== qIndex) {
+    activeQIndex = qIndex;
+    isAnsweredCurrentQ = false;
+
+    document.getElementById('q-progress').textContent = "Soru " + (qIndex + 1) + "/" + QUESTION_BANK.length;
+    document.getElementById('q-category').textContent = question.category;
+    document.getElementById('q-text').textContent = question.question;
+    document.getElementById('game-status-line').textContent = "";
+
+    const grid = document.getElementById('options-grid');
+    grid.innerHTML = "";
+
+    const labels = ["A", "B", "C", "D"];
+    question.options.forEach(function(optText, idx) {
+      const btn = document.createElement('button');
+      btn.className = 'opt-btn';
+      btn.dataset.index = idx;
+      btn.innerHTML = '<div class="opt-badge">' + labels[idx] + '</div><div class="opt-text">' + optText + '</div>';
+      btn.addEventListener('click', function() { sendAnswer(idx, question.answer); });
+      grid.appendChild(btn);
+    });
+
+    startTimer(data.qStartTime);
+  }
+
+  const myData = data[myRole];
+
+  if(myData.answer !== -1 && !isAnsweredCurrentQ) {
+    isAnsweredCurrentQ = true;
+    highlightMyAnswer(myData.answer);
+  }
+
+  const allAnswered = ROLES.every(function(r) { return data[r].answer !== -1; });
+  if(allAnswered) {
+    if(myRole === 'host') {
+      setTimeout(function() { advanceToNextQuestion(qIndex); }, 1500);
+    }
+  }
+}
+
+function startTimer(qStartTime) {
+  clearInterval(timerInterval);
   const timerNum = document.getElementById('timer-num');
-  
-  const circumference = 2 * Math.PI * 27; // ~169.64
-  
-  gameState.timerInterval = setInterval(() => {
-    gameState.timer--;
-    timerNum.textContent = gameState.timer;
-    
-    const offset = circumference - (gameState.timer / 20) * circumference;
+  const ringFg = document.getElementById('ring-fg');
+  const strokeDashMax = 170;
+
+  timerInterval = setInterval(function() {
+    const elapsed = Math.floor((Date.now() - qStartTime) / 1000);
+    const remaining = Math.max(0, QUESTION_TIME - elapsed);
+
+    timerNum.textContent = remaining;
+
+    const offset = strokeDashMax - (remaining / QUESTION_TIME) * strokeDashMax;
+    ringFg.style.strokeDasharray = strokeDashMax;
     ringFg.style.strokeDashoffset = offset;
 
-    if(gameState.timer <= 5) {
+    if(remaining <= 5) {
       ringFg.classList.add('warn');
     } else {
       ringFg.classList.remove('warn');
     }
 
-    if(gameState.timer <= 0) {
-      clearInterval(gameState.timerInterval);
-      evaluateTurn();
-    }
-  }, 1000);
-}
-
-function resetTimerRing() {
-  const ringFg = document.getElementById('ring-fg');
-  ringFg.classList.remove('warn');
-  ringFg.style.strokeDashoffset = 0;
-  document.getElementById('timer-num').textContent = "20";
-}
-
-// CEVAP SEÇME
-function selectOption(index) {
-  if(gameState.selectedOption !== null) return;
-  
-  gameState.selectedOption = index;
-  const buttons = document.querySelectorAll('.opt-btn');
-  buttons[index].classList.add('picked-mine');
-  
-  document.getElementById('game-status-line').textContent = "Cevabınız kaydedildi. Süre dolunca sonuç gösterilecek.";
-}
-
-// CEVAPLARI DEĞERLENDİRME & PUANLAMA
-function evaluateTurn() {
-  clearInterval(gameState.timerInterval);
-  const q = QUESTION_BANK[gameState.currentQuestionIndex];
-  const buttons = document.querySelectorAll('.opt-btn');
-
-  // Butonları kilitle ve doğru cevabı göster
-  buttons.forEach((btn, idx) => {
-    btn.disabled = true;
-    if(idx === q.answer) {
-      btn.classList.add('reveal-correct');
-    }
-  });
-
-  if(gameState.selectedOption !== null) {
-    if(gameState.selectedOption === q.answer) {
-      gameState.scores[gameState.myTeamIndex] += 100;
-    } else {
-      buttons[gameState.selectedOption].classList.add('reveal-wrong-mine');
-    }
-  }
-
-  // Rakip bot takımlar için simülasyon puanlama
-  for(let i = 0; i < 3; i++) {
-    if(i !== gameState.myTeamIndex) {
-      // %70 ihtimalle doğru bilsinler
-      if(Math.random() < 0.7) {
-        gameState.scores[i] += 100;
+    if(remaining <= 0) {
+      clearInterval(timerInterval);
+      disableOptions();
+      if(myRole === 'host') {
+        advanceToNextQuestion(activeQIndex);
       }
     }
-    document.getElementById(`slot${i}-score`).textContent = gameState.scores[i];
-  }
-
-  document.getElementById('game-status-line').textContent = "Sonraki soruya geçiliyor...";
-
-  setTimeout(() => {
-    gameState.currentQuestionIndex++;
-    loadQuestion();
-  }, 3000);
+  }, 200);
 }
 
-// SONUÇ EKRANI
-function showResults() {
-  showScreen('screen-result');
-  
-  // Sıralama Yap
-  const ranked = gameState.teams.map((t, idx) => ({
-    name: t.name,
-    score: gameState.scores[idx]
-  })).sort((a, b) => b.score - a.score);
+function sendAnswer(optIndex, correctIndex) {
+  if(isAnsweredCurrentQ) return;
+  isAnsweredCurrentQ = true;
 
-  const rankList = document.getElementById('rank-list');
-  rankList.innerHTML = '';
+  highlightMyAnswer(optIndex);
 
-  const medals = ['🥇', '🥈', '🥉'];
-  ranked.forEach((item, index) => {
-    const row = document.createElement('div');
-    row.className = `rank-row ${index === 0 ? 'gold' : ''}`;
-    row.innerHTML = `
-      <div class="rmedal">${medals[index]}</div>
-      <div class="rname">${item.name}</div>
-      <div class="rscore">${item.score} Puan</div>
-    `;
-    rankList.appendChild(row);
+  const isCorrect = (optIndex === correctIndex);
+
+  roomRef.child(myRole).once('value', function(snap) {
+    const val = snap.val();
+    const currentScore = val.score || 0;
+    const newScore = isCorrect ? currentScore + 10 : currentScore;
+
+    roomRef.child(myRole).update({
+      answer: optIndex,
+      score: newScore
+    });
   });
 
-  if(ranked[0].name === gameState.myTeamName) {
-    document.getElementById('result-headline').textContent = "Şampiyon Sınıfınız! 🏆";
-  } else {
-    document.getElementById('result-headline').textContent = "Yarışma Tamamlandı!";
+  document.getElementById('game-status-line').textContent = "Cevabınız iletildi, rakipler/süre bekleniyor...";
+}
+
+function highlightMyAnswer(optIndex) {
+  disableOptions();
+  const btns = document.querySelectorAll('.opt-btn');
+  if(btns[optIndex]) {
+    btns[optIndex].classList.add('picked-mine');
   }
 }
 
-// YENİ OYUN
-document.getElementById('result-newgame').addEventListener('click', () => {
-  document.getElementById('room-badge').style.display = 'none';
-  document.getElementById('panel-create').classList.remove('active');
-  document.getElementById('panel-join').classList.remove('active');
-  document.getElementById('home-choices').style.display = 'flex';
-  showScreen('screen-home');
+function disableOptions() {
+  const btns = document.querySelectorAll('.opt-btn');
+  btns.forEach(function(b) { b.disabled = true; });
+}
+
+function advanceToNextQuestion(currentQIndex) {
+  roomRef.update({
+    currentQ: currentQIndex + 1,
+    qStartTime: Date.now(),
+    'host/answer': -1,
+    'guest1/answer': -1,
+    'guest2/answer': -1
+  });
+}
+
+function showResults(data) {
+  clearInterval(timerInterval);
+  showScreen('result');
+
+  const teams = [
+    { name: data.host.name, score: data.host.score },
+    { name: data.guest1.name, score: data.guest1.score },
+    { name: data.guest2.name, score: data.guest2.score }
+  ];
+
+  document.getElementById('result-name1').textContent = teams[0].name;
+  document.getElementById('result-score1').textContent = teams[0].score;
+  document.getElementById('result-name2').textContent = teams[1].name;
+  document.getElementById('result-score2').textContent = teams[1].score;
+  document.getElementById('result-name3').textContent = teams[2].name;
+  document.getElementById('result-score3').textContent = teams[2].score;
+
+  const headline = document.getElementById('result-headline');
+  const maxScore = Math.max(teams[0].score, teams[1].score, teams[2].score);
+  const winners = teams.filter(function(t) { return t.score === maxScore; });
+
+  if(winners.length === teams.length) {
+    headline.textContent = "Dostluk Kazandı! Herkes Berabere! 🤝";
+  } else if(winners.length === 1) {
+    headline.textContent = winners[0].name + " Kazandı! 🎉";
+  } else {
+    headline.textContent = winners.map(function(w) { return w.name; }).join(" ve ") + " Berabere Kazandı! 🎉";
+  }
+}
+
+document.getElementById('result-newgame').addEventListener('click', function() {
+  window.location.reload();
 });
 </script>
 </body>
