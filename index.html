@@ -243,6 +243,22 @@
   .opt-text{font-size:17px; font-weight:700; color:var(--white);}
   .opt-btn.picked-mine{border-color:var(--gold); background:rgba(242,183,5,0.14);}
   .opt-btn.picked-mine .opt-badge{background:var(--gold); color:var(--navy-900);}
+
+  @keyframes correct-blink{
+    0%, 100%{ background:rgba(47,174,96,0.16); border-color:var(--green); }
+    50%{ background:rgba(47,174,96,0.55); border-color:#7CE3A6; }
+  }
+  .opt-btn.correct-flash{
+    animation: correct-blink 0.6s ease-in-out 3;
+    border-color:var(--green);
+    background:rgba(47,174,96,0.35);
+  }
+  .opt-btn.correct-flash .opt-badge{background:var(--green); color:var(--white);}
+  .opt-btn.wrong-pick{
+    border-color:var(--red);
+    background:rgba(214,69,65,0.28);
+  }
+  .opt-btn.wrong-pick .opt-badge{background:var(--red); color:var(--white);}
   .status-line{
     text-align:center; margin-top:16px; font-weight:800; color:var(--gray-300); font-size:14px; min-height:18px;
   }
@@ -792,7 +808,7 @@ function renderQuestion(qIndex, data) {
 
   if(myData.answer !== -1 && !isAnsweredCurrentQ) {
     isAnsweredCurrentQ = true;
-    highlightMyAnswer(myData.answer);
+    showAnswerFeedback(myData.answer, question.answer);
   }
 
   const allAnswered = ROLES.every(function(r) { return data[r].answer !== -1; });
@@ -839,7 +855,7 @@ function sendAnswer(optIndex, correctIndex) {
   if(isAnsweredCurrentQ) return;
   isAnsweredCurrentQ = true;
 
-  highlightMyAnswer(optIndex);
+  showAnswerFeedback(optIndex, correctIndex);
 
   const isCorrect = (optIndex === correctIndex);
 
@@ -857,11 +873,14 @@ function sendAnswer(optIndex, correctIndex) {
   document.getElementById('game-status-line').textContent = "Cevabınız iletildi, rakipler/süre bekleniyor...";
 }
 
-function highlightMyAnswer(optIndex) {
+function showAnswerFeedback(pickedIndex, correctIndex) {
   disableOptions();
   const btns = document.querySelectorAll('.opt-btn');
-  if(btns[optIndex]) {
-    btns[optIndex].classList.add('picked-mine');
+  if(btns[correctIndex]) {
+    btns[correctIndex].classList.add('correct-flash');
+  }
+  if(pickedIndex !== correctIndex && btns[pickedIndex]) {
+    btns[pickedIndex].classList.add('wrong-pick');
   }
 }
 
