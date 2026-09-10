@@ -297,7 +297,7 @@
   .intro-logo{
     width:100%; height:100%; object-fit:contain;
     filter:drop-shadow(0 16px 34px rgba(0,0,0,0.55));
-    animation: introSpin 4s linear forwards;
+    animation: introSpin 8s linear forwards;
     backface-visibility:hidden;
   }
   @keyframes introSpin{
@@ -308,12 +308,12 @@
   .intro-brand{
     font-family:'Baloo 2',sans-serif; font-weight:800;
     font-size:26px; letter-spacing:1px; color:var(--white);
-    opacity:0; animation: introFadeIn 0.8s ease 2.4s forwards;
+    opacity:0; animation: introFadeIn 0.8s ease 4.8s forwards;
     text-align:center;
   }
   .intro-sub{
     font-weight:700; font-size:14px; color:var(--gray-300);
-    opacity:0; animation: introFadeIn 0.8s ease 2.7s forwards;
+    opacity:0; animation: introFadeIn 0.8s ease 5.4s forwards;
     text-align:center;
   }
   @keyframes introFadeIn{
@@ -564,7 +564,7 @@ introLogoEl.src = introLogos[0];
 // Swap the intro logo at each edge-on point of the spin (every half turn),
 // so the two logos alternate as it rotates.
 let introLogoIdx = 0;
-const introSwapPoints = [333, 1000, 1667, 2333, 3000, 3667];
+const introSwapPoints = [667, 2000, 3333, 4667, 6000, 7333];
 introSwapPoints.forEach(function(t) {
   setTimeout(function() {
     introLogoIdx = 1 - introLogoIdx;
@@ -574,7 +574,7 @@ introSwapPoints.forEach(function(t) {
 
 setTimeout(function() {
   showScreen('home');
-}, 4000);
+}, 8000);
 
 document.getElementById('choice-create').addEventListener('click', function() {
   document.getElementById('home-choices').style.display = 'none';
