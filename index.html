@@ -463,58 +463,71 @@ if (!firebase.apps.length) {
 }
 const db = firebase.database();
 
+let serverTimeOffset = 0;
+db.ref(".info/serverTimeOffset").on("value", function(snap) {
+  serverTimeOffset = snap.val() || 0;
+});
+function getServerNow() {
+  return Date.now() + serverTimeOffset;
+}
+
 const QUESTION_BANK = [
   // Genel Kültür (5 Soru)
-  { id: 1, category: "Genel Kültür", question: "Dünyanın en uzun nehri hangisidir?", options: ["Amazon", "Nil", "Fırat", "Tuna"], answer: 1 },
-  { id: 2, category: "Genel Kültür", question: "İstiklal Marşı'mızın şairi kimdir?", options: ["Mehmet Âkif Ersoy", "Yahya Kemal", "Ziya Gökalp", "Namık Kemal"], answer: 0 },
-  { id: 3, category: "Genel Kültür", question: "Mona Lisa tablosu kime aittir?", options: ["Pablo Picasso", "Leonardo da Vinci", "Vincent van Gogh", "Salvador Dalí"], answer: 1 },
-  { id: 4, category: "Genel Kültür", question: "Pusulanın ana yönü N harfi ile gösterilen hangisidir?", options: ["Güney", "Kuzey", "Doğu", "Batı"], answer: 1 },
-  { id: 5, category: "Genel Kültür", question: "Olimpiyat halkalarında kaç renk bulunur?", options: ["4", "5", "6", "7"], answer: 1 },
+  { id: 1, category: "Genel Kültür", question: "Dünyanın en uzun nehri hangisidir?", options: ["Amazon", "Nil", "Fırat", "Tuna"], k: 3 },
+  { id: 2, category: "Genel Kültür", question: "İstiklal Marşı'mızın şairi kimdir?", options: ["Mehmet Âkif Ersoy", "Yahya Kemal", "Ziya Gökalp", "Namık Kemal"], k: 3 },
+  { id: 3, category: "Genel Kültür", question: "Mona Lisa tablosu kime aittir?", options: ["Pablo Picasso", "Leonardo da Vinci", "Vincent van Gogh", "Salvador Dalí"], k: 1 },
+  { id: 4, category: "Genel Kültür", question: "Pusulanın ana yönü N harfi ile gösterilen hangisidir?", options: ["Güney", "Kuzey", "Doğu", "Batı"], k: 2 },
+  { id: 5, category: "Genel Kültür", question: "Olimpiyat halkalarında kaç renk bulunur?", options: ["4", "5", "6", "7"], k: 3 },
 
   // Dünya (5 Soru)
-  { id: 6, category: "Dünya", question: "Yüzölçümü bakımından dünyanın en büyük ülkesi hangisidir?", options: ["Çin", "Kanada", "ABD", "Rusya"], answer: 3 },
-  { id: 7, category: "Dünya", question: "Dünyanın en büyük okyanusu hangisidir?", options: ["Atlas Okyanusu", "Hint Okyanusu", "Büyük Okyanus (Pasifik)", "Arktik Okyanusu"], answer: 2 },
-  { id: 8, category: "Dünya", question: "Yüzölçümü en büyük kıta hangisidir?", options: ["Afrika", "Avrupa", "Asya", "Amerika"], answer: 2 },
-  { id: 9, category: "Dünya", question: "İtalya'nın başkenti neresidir?", options: ["Milano", "Venedik", "Roma", "Napoli"], answer: 2 },
-  { id: 10, category: "Dünya", question: "Eyfel Kulesi hangi şehirde yer alır?", options: ["Londra", "Paris", "Berlin", "Madrid"], answer: 1 },
+  { id: 6, category: "Dünya", question: "Yüzölçümü bakımından dünyanın en büyük ülkesi hangisidir?", options: ["Çin", "Kanada", "ABD", "Rusya"], k: 2 },
+  { id: 7, category: "Dünya", question: "Dünyanın en büyük okyanusu hangisidir?", options: ["Atlas Okyanusu", "Hint Okyanusu", "Büyük Okyanus (Pasifik)", "Arktik Okyanusu"], k: 2 },
+  { id: 8, category: "Dünya", question: "Yüzölçümü en büyük kıta hangisidir?", options: ["Afrika", "Avrupa", "Asya", "Amerika"], k: 3 },
+  { id: 9, category: "Dünya", question: "İtalya'nın başkenti neresidir?", options: ["Milano", "Venedik", "Roma", "Napoli"], k: 0 },
+  { id: 10, category: "Dünya", question: "Eyfel Kulesi hangi şehirde yer alır?", options: ["Londra", "Paris", "Berlin", "Madrid"], k: 0 },
 
   // Güncel Bilgi (5 Soru)
-  { id: 11, category: "Güncel Bilgi", question: "Türkiye'nin ilk yerli ve millî otomobil markası hangisidir?", options: ["Devrim", "TOGG", "Anadol", "Şahin"], answer: 1 },
-  { id: 12, category: "Güncel Bilgi", question: "Uzaya giden ilk Türk astronot kimdir?", options: ["Alper Gezeravcı", "Tuva Cihangir Atasever", "Umut Yıldız", "Ali Kuşçu"], answer: 0 },
-  { id: 13, category: "Güncel Bilgi", question: "EURO 2024 Avrupa Futbol Şampiyonası hangi ülkede düzenlenmiştir?", options: ["Fransa", "İngiltere", "Almanya", "İspanya"], answer: 2 },
-  { id: 14, category: "Güncel Bilgi", question: "Birleşmiş Milletler (BM) Genel Merkezi hangi şehirdedir?", options: ["Cenevre", "New York", "Brüksel", "Pekin"], answer: 1 },
-  { id: 15, category: "Güncel Bilgi", question: "Türkiye'nin ilk insansız savaş uçağı projesinin adı nedir?", options: ["BAYRAKTAR TB2", "ANKA", "KAAN", "KIZILELMA"], answer: 3 },
+  { id: 11, category: "Güncel Bilgi", question: "Türkiye'nin ilk yerli ve millî otomobil markası hangisidir?", options: ["Devrim", "TOGG", "Anadol", "Şahin"], k: 1 },
+  { id: 12, category: "Güncel Bilgi", question: "Uzaya giden ilk Türk astronot kimdir?", options: ["Alper Gezeravcı", "Tuva Cihangir Atasever", "Umut Yıldız", "Ali Kuşçu"], k: 1 },
+  { id: 13, category: "Güncel Bilgi", question: "EURO 2024 Avrupa Futbol Şampiyonası hangi ülkede düzenlenmiştir?", options: ["Fransa", "İngiltere", "Almanya", "İspanya"], k: 0 },
+  { id: 14, category: "Güncel Bilgi", question: "Birleşmiş Milletler (BM) Genel Merkezi hangi şehirdedir?", options: ["Cenevre", "New York", "Brüksel", "Pekin"], k: 0 },
+  { id: 15, category: "Güncel Bilgi", question: "Türkiye'nin ilk insansız savaş uçağı projesinin adı nedir?", options: ["BAYRAKTAR TB2", "ANKA", "KAAN", "KIZILELMA"], k: 3 },
 
   // İngilizce Bilmece (5 Soru)
-  { id: 16, category: "İngilizce Bilmece", question: "I have hands, but I cannot clap. What am I?", options: ["A clock", "A chair", "A tree", "A book"], answer: 0 },
-  { id: 17, category: "İngilizce Bilmece", question: "What has to be broken before you can use it?", options: ["A glass", "An egg", "A phone", "A door"], answer: 1 },
-  { id: 18, category: "İngilizce Bilmece", question: "I speak without a mouth and hear without ears. What am I?", options: ["An echo", "A shadow", "A cloud", "A wind"], answer: 0 },
-  { id: 19, category: "İngilizce Bilmece", question: "What goes up but never comes down?", options: ["A balloon", "Your age", "A plane", "The rain"], answer: 1 },
-  { id: 20, category: "İngilizce Bilmece", question: "What has many keys but can't open a single lock?", options: ["A map", "A piano", "A box", "A house"], answer: 1 },
+  { id: 16, category: "İngilizce Bilmece", question: "I have hands, but I cannot clap. What am I?", options: ["A clock", "A chair", "A tree", "A book"], k: 1 },
+  { id: 17, category: "İngilizce Bilmece", question: "What has to be broken before you can use it?", options: ["A glass", "An egg", "A phone", "A door"], k: 3 },
+  { id: 18, category: "İngilizce Bilmece", question: "I speak without a mouth and hear without ears. What am I?", options: ["An echo", "A shadow", "A cloud", "A wind"], k: 3 },
+  { id: 19, category: "İngilizce Bilmece", question: "What goes up but never comes down?", options: ["A balloon", "Your age", "A plane", "The rain"], k: 1 },
+  { id: 20, category: "İngilizce Bilmece", question: "What has many keys but can't open a single lock?", options: ["A map", "A piano", "A box", "A house"], k: 2 },
 
   // Uzay ve Evren (5 Soru)
-  { id: 21, category: "Uzay ve Evren", question: "Güneş Sistemimizdeki en büyük gezegen hangisidir?", options: ["Mars", "Venüs", "Jüpiter", "Satürn"], answer: 2 },
-  { id: 22, category: "Uzay ve Evren", question: "Halkalarıyla ünlü olan gezegen hangisidir?", options: ["Satürn", "Uranüs", "Neptün", "Mars"], answer: 0 },
-  { id: 23, category: "Uzay ve Evren", question: "'Kızıl Gezegen' olarak bilinen gezegen hangisidir?", options: ["Venüs", "Mars", "Merkür", "Jüpiter"], answer: 1 },
-  { id: 24, category: "Uzay ve Evren", question: "Dünya'nın tek doğal uydusu nedir?", options: ["Güneş", "Titan", "Ay", "Phobos"], answer: 2 },
-  { id: 25, category: "Uzay ve Evren", question: "Güneş'e en yakın gezegen hangisidir?", options: ["Merkür", "Venüs", "Dünya", "Mars"], answer: 0 },
+  { id: 21, category: "Uzay ve Evren", question: "Güneş Sistemimizdeki en büyük gezegen hangisidir?", options: ["Mars", "Venüs", "Jüpiter", "Satürn"], k: 0 },
+  { id: 22, category: "Uzay ve Evren", question: "Halkalarıyla ünlü olan gezegen hangisidir?", options: ["Satürn", "Uranüs", "Neptün", "Mars"], k: 3 },
+  { id: 23, category: "Uzay ve Evren", question: "'Kızıl Gezegen' olarak bilinen gezegen hangisidir?", options: ["Venüs", "Mars", "Merkür", "Jüpiter"], k: 1 },
+  { id: 24, category: "Uzay ve Evren", question: "Dünya'nın tek doğal uydusu nedir?", options: ["Güneş", "Titan", "Ay", "Phobos"], k: 3 },
+  { id: 25, category: "Uzay ve Evren", question: "Güneş'e en yakın gezegen hangisidir?", options: ["Merkür", "Venüs", "Dünya", "Mars"], k: 2 },
 
   // Matematik (5 Soru)
-  { id: 26, category: "Matematik", question: "Bir dik üçgende en uzun kenara ne ad verilir?", options: ["Dik kenar", "Taban", "Hipotenüs", "Yükseklik"], answer: 2 },
-  { id: 27, category: "Matematik", question: "En küçük asal sayı kaçtır?", options: ["0", "1", "2", "3"], answer: 2 },
-  { id: 28, category: "Matematik", question: "Çemberin çevresini bulmak için kullanılan sabit sayı hangisidir?", options: ["Altın Oran", "Pi Sayısı", "Euler Sayısı", "Kök 2"], answer: 1 },
-  { id: 29, category: "Matematik", question: "İç açıları toplamı 180 derece olan geometrik şekil hangisidir?", options: ["Kare", "Dikdörtgen", "Üçgen", "Beşgen"], answer: 2 },
-  { id: 30, category: "Matematik", question: "8'in küpü (8³) kaçtır?", options: ["64", "256", "512", "1024"], answer: 2 },
+  { id: 26, category: "Matematik", question: "Bir dik üçgende en uzun kenara ne ad verilir?", options: ["Dik kenar", "Taban", "Hipotenüs", "Yükseklik"], k: 1 },
+  { id: 27, category: "Matematik", question: "En küçük asal sayı kaçtır?", options: ["0", "1", "2", "3"], k: 2 },
+  { id: 28, category: "Matematik", question: "Çemberin çevresini bulmak için kullanılan sabit sayı hangisidir?", options: ["Altın Oran", "Pi Sayısı", "Euler Sayısı", "Kök 2"], k: 2 },
+  { id: 29, category: "Matematik", question: "İç açıları toplamı 180 derece olan geometrik şekil hangisidir?", options: ["Kare", "Dikdörtgen", "Üçgen", "Beşgen"], k: 0 },
+  { id: 30, category: "Matematik", question: "8'in küpü (8³) kaçtır?", options: ["64", "256", "512", "1024"], k: 1 },
 
   // Eskişehir (5 Soru)
-  { id: 31, category: "Eskişehir", question: "Eskişehir içinden geçen ve şehre hayat veren ünlü nehir hangisidir?", options: ["Kızılırmak", "Yeşilırmak", "Porsuk Çayı", "Sakarya Nehrı"], answer: 2 },
-  { id: 32, category: "Eskişehir", question: "Eskişehir ile özdeşleşen, beyaz renkli ve işlemesiyle ünlü değerli taş hangisidir?", options: ["Oltu Taşı", "Lüle Taşı", "Kehribar", "Zümrüt"], answer: 1 },
-  { id: 33, category: "Eskişehir", question: "Eskişehir'in tarihi evleriyle ünlü turistik semti neresidir?", options: ["Odunpazarı", "Tepebaşı", "Bağlar", "İnönü"], answer: 0 },
-  { id: 34, category: "Eskişehir", question: "Eskişehir'e özgü olan, kıymalı harçla yapılıp yağda kızartılan ünlü lezzet hangisidir?", options: ["Mantı", "Çibörek", "Gözleme", "Pide"], answer: 1 },
-  { id: 35, category: "Eskişehir", question: "1961 yılında Eskişehir Demiryolu Fabrikası'nda üretilen ilk Türk otomobili hangisidir?", options: ["Devrim", "Anadol", "Murat 124", "Toros"], answer: 0 }
+  { id: 31, category: "Eskişehir", question: "Eskişehir içinden geçen ve şehre hayat veren ünlü nehir hangisidir?", options: ["Kızılırmak", "Yeşilırmak", "Porsuk Çayı", "Sakarya Nehrı"], k: 2 },
+  { id: 32, category: "Eskişehir", question: "Eskişehir ile özdeşleşen, beyaz renkli ve işlemesiyle ünlü değerli taş hangisidir?", options: ["Oltu Taşı", "Lüle Taşı", "Kehribar", "Zümrüt"], k: 2 },
+  { id: 33, category: "Eskişehir", question: "Eskişehir'in tarihi evleriyle ünlü turistik semti neresidir?", options: ["Odunpazarı", "Tepebaşı", "Bağlar", "İnönü"], k: 2 },
+  { id: 34, category: "Eskişehir", question: "Eskişehir'e özgü olan, kıymalı harçla yapılıp yağda kızartılan ünlü lezzet hangisidir?", options: ["Mantı", "Çibörek", "Gözleme", "Pide"], k: 0 },
+  { id: 35, category: "Eskişehir", question: "1961 yılında Eskişehir Demiryolu Fabrikası'nda üretilen ilk Türk otomobili hangisidir?", options: ["Devrim", "Anadol", "Murat 124", "Toros"], k: 0 }
 ];
 
 const ROLES = ['host', 'guest1', 'guest2'];
+
+const ANSWER_SECRET = 17;
+function getCorrectIndex(q) {
+  return ((q.k - ANSWER_SECRET - q.id) % 4 + 4) % 4;
+}
 
 let currentRoomCode = null;
 let myRole = null;
@@ -730,7 +743,7 @@ function startCountdown() {
         roomRef.update({
           status: 'playing',
           currentQ: 0,
-          qStartTime: Date.now()
+          qStartTime: firebase.database.ServerValue.TIMESTAMP
         });
       }
     }
@@ -797,7 +810,7 @@ function renderQuestion(qIndex, data) {
       btn.className = 'opt-btn';
       btn.dataset.index = idx;
       btn.innerHTML = '<div class="opt-badge">' + labels[idx] + '</div><div class="opt-text">' + optText + '</div>';
-      btn.addEventListener('click', function() { sendAnswer(idx, question.answer); });
+      btn.addEventListener('click', function() { sendAnswer(idx, getCorrectIndex(question)); });
       grid.appendChild(btn);
     });
 
@@ -808,7 +821,7 @@ function renderQuestion(qIndex, data) {
 
   if(myData.answer !== -1 && !isAnsweredCurrentQ) {
     isAnsweredCurrentQ = true;
-    showAnswerFeedback(myData.answer, question.answer);
+    showAnswerFeedback(myData.answer, getCorrectIndex(question));
   }
 
   const allAnswered = ROLES.every(function(r) { return data[r].answer !== -1; });
@@ -826,7 +839,7 @@ function startTimer(qStartTime) {
   const strokeDashMax = 170;
 
   timerInterval = setInterval(function() {
-    const elapsed = Math.floor((Date.now() - qStartTime) / 1000);
+    const elapsed = Math.floor((getServerNow() - qStartTime) / 1000);
     const remaining = Math.max(0, QUESTION_TIME - elapsed);
 
     timerNum.textContent = remaining;
@@ -892,7 +905,7 @@ function disableOptions() {
 function advanceToNextQuestion(currentQIndex) {
   roomRef.update({
     currentQ: currentQIndex + 1,
-    qStartTime: Date.now(),
+    qStartTime: firebase.database.ServerValue.TIMESTAMP,
     'host/answer': -1,
     'guest1/answer': -1,
     'guest2/answer': -1
