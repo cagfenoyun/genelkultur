@@ -32,11 +32,11 @@
       radial-gradient(circle at 18% 12%, rgba(232,84,42,0.16), transparent 42%),
       radial-gradient(circle at 82% 78%, rgba(28,74,133,0.35), transparent 45%),
       linear-gradient(160deg, var(--navy-900) 0%, #081327 100%);
-    overflow:hidden;
+    overflow:auto;
     -webkit-user-select:none;
     user-select:none;
   }
-  #app{position:relative; width:100vw; height:100vh; display:flex; flex-direction:column;}
+  #app{position:relative; width:100vw; min-height:100vh; display:flex; flex-direction:column;}
 
   #topbar{
     display:flex; align-items:center; gap:16px;
@@ -101,11 +101,12 @@
     -webkit-tap-highlight-color:transparent;
   }
   .btn:active{transform:scale(0.96);}
+  .btn:disabled{opacity:0.45; cursor:not-allowed; filter:none;}
   .btn-primary{
     background:linear-gradient(180deg, var(--orange), var(--orange-dark));
     box-shadow:0 10px 22px rgba(232,84,42,0.35);
   }
-  .btn-primary:hover{filter:brightness(1.08);}
+  .btn-primary:hover:not(:disabled){filter:brightness(1.08);}
   .btn-block{width:100%;}
 
   #screen-home .choice-row{
@@ -142,28 +143,34 @@
   }
 
   #screen-lobby .lobby-code{
-    text-align:center; margin-bottom:26px;
+    text-align:center; margin-bottom:22px;
   }
   #screen-lobby .lobby-code .cap{font-size:13px; letter-spacing:2px; color:var(--gray-300); font-weight:800;}
   #screen-lobby .lobby-code .val{
     font-family:'Baloo 2',sans-serif; font-size:52px; font-weight:800; color:var(--gold);
     letter-spacing:14px; margin-top:2px;
   }
-  .lobby-teams{display:flex; align-items:center; gap:16px; justify-content:center; flex-wrap:wrap;}
+  .lobby-count{text-align:center; color:var(--gray-300); font-weight:800; font-size:13px; margin-bottom:16px; letter-spacing:0.5px;}
+  .lobby-teams-wrap{
+    display:flex; flex-wrap:wrap; gap:14px; justify-content:center;
+    max-width:640px; margin-bottom:8px;
+  }
   .team-slot{
-    width:190px; min-height:150px; border-radius:18px; padding:18px 14px;
+    width:170px; min-height:120px; border-radius:18px; padding:16px 14px;
     background:rgba(255,255,255,0.05); border:2px solid rgba(255,255,255,0.1);
-    text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+    text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
   }
   .team-slot.me{border-color:var(--orange);}
-  .team-slot .tname{font-family:'Baloo 2',sans-serif; font-size:18px; font-weight:700; word-break:break-word;}
-  .team-slot .tstatus{font-size:13px; font-weight:800; padding:5px 12px; border-radius:20px;}
+  .team-slot .tname{font-family:'Baloo 2',sans-serif; font-size:17px; font-weight:700; word-break:break-word;}
+  .team-slot .tstatus{font-size:12px; font-weight:800; padding:5px 12px; border-radius:20px;}
   .tstatus.waiting{background:rgba(124,138,163,0.25); color:var(--gray-300);}
   .tstatus.ready{background:rgba(47,174,96,0.22); color:#7CE3A6;}
-  .vs-badge{
-    font-family:'Baloo 2',sans-serif; font-size:22px; font-weight:800; color:var(--gray-500);
+  .host-tag{font-size:11px; color:var(--gold); font-weight:800;}
+  .lobby-empty-hint{
+    color:var(--gray-500); font-weight:700; font-size:14px; text-align:center;
+    padding:20px; border:2px dashed rgba(255,255,255,0.14); border-radius:16px; width:100%; max-width:400px;
   }
-  #lobby-ready-btn{margin-top:28px;}
+  #lobby-ready-btn, #lobby-start-btn{margin-top:10px;}
   .countdown-overlay{
     position:absolute; inset:0; display:none; align-items:center; justify-content:center;
     background:rgba(6,14,28,0.72); z-index:30; flex-direction:column; gap:8px;
@@ -176,35 +183,18 @@
   .countdown-label{font-weight:800; color:var(--gray-300); letter-spacing:2px; font-size:16px;}
 
   #screen-game{padding:14px 24px 22px; justify-content:flex-start;}
-  .game-layout{
-    width:100%; height:100%; display:grid;
-    grid-template-columns: 220px 1fr 220px;
-    gap:20px; align-items:stretch;
+  .game-shell{
+    width:100%; max-width:980px; margin:0 auto;
+    display:flex; flex-direction:column; gap:14px; height:100%; min-height:0;
   }
-  .rivals-col{display:flex; flex-direction:column; gap:14px; min-height:0;}
-  .score-panel{
-    border-radius:20px; padding:22px 18px; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; gap:8px; text-align:center;
-    background:linear-gradient(180deg, rgba(21,54,98,0.65), rgba(15,39,74,0.75));
-    border:1px solid rgba(255,255,255,0.08);
-  }
-  .score-panel.mine{border-bottom:4px solid var(--orange);}
-  .score-panel.rival{border-bottom:4px solid var(--navy-600); flex:1; padding:14px 12px;}
-  .score-panel .sp-cap{font-size:12px; font-weight:800; letter-spacing:2px; color:var(--gray-300);}
-  .score-panel .sp-name{font-family:'Baloo 2',sans-serif; font-size:19px; font-weight:700; margin:2px 0 10px; word-break:break-word;}
-  .score-panel.rival .sp-name{font-size:16px; margin:2px 0 6px;}
-  .score-panel .sp-score{font-family:'Baloo 2',sans-serif; font-size:54px; font-weight:800; line-height:1;}
-  .score-panel.rival .sp-score{font-size:36px;}
-
-  .center-col{display:flex; flex-direction:column; gap:14px; min-height:0;}
-  .meta-row{display:flex; align-items:center; justify-content:space-between; padding:0 6px;}
-  .q-progress{font-weight:800; color:var(--gray-300); font-size:14px;}
+  .meta-row{display:flex; align-items:center; justify-content:space-between; padding:0 6px; gap:14px;}
+  .q-progress{font-weight:800; color:var(--gray-300); font-size:14px; white-space:nowrap;}
   .q-category{
     font-family:'Baloo 2',sans-serif; font-weight:700; font-size:14px;
     background:rgba(232,84,42,0.18); color:#FFB79C; padding:6px 16px; border-radius:20px;
-    border:1px solid rgba(232,84,42,0.4);
+    border:1px solid rgba(232,84,42,0.4); white-space:nowrap;
   }
-  .timer-wrap{position:relative; width:64px; height:64px;}
+  .timer-wrap{position:relative; width:64px; height:64px; flex-shrink:0;}
   .timer-wrap svg{transform:rotate(-90deg);}
   .timer-wrap .ring-bg{fill:none; stroke:rgba(255,255,255,0.12); stroke-width:6;}
   .timer-wrap .ring-fg{fill:none; stroke:var(--gold); stroke-width:6; stroke-linecap:round; transition:stroke-dashoffset .1s linear, stroke .2s ease;}
@@ -213,6 +203,18 @@
     position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
     font-family:'Baloo 2',sans-serif; font-weight:800; font-size:20px;
   }
+
+  .scoreboard-strip{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; padding:2px 6px;}
+  .score-chip{
+    display:flex; align-items:center; gap:10px;
+    background:rgba(255,255,255,0.06);
+    border:2px solid rgba(255,255,255,0.12);
+    border-radius:14px; padding:8px 16px;
+  }
+  .score-chip.mine{border-color:var(--orange); background:rgba(232,84,42,0.16);}
+  .score-chip .sc-name{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:14px; color:var(--gray-300); max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .score-chip.mine .sc-name{color:var(--white);}
+  .score-chip .sc-score{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:19px; color:var(--gold);}
 
   .question-card{
     flex:1; min-height:0; display:flex; flex-direction:column; justify-content:center;
@@ -241,8 +243,6 @@
     font-family:'Baloo 2',sans-serif; font-weight:800; font-size:16px;
   }
   .opt-text{font-size:17px; font-weight:700; color:var(--white);}
-  .opt-btn.picked-mine{border-color:var(--gold); background:rgba(242,183,5,0.14);}
-  .opt-btn.picked-mine .opt-badge{background:var(--gold); color:var(--navy-900);}
 
   @keyframes correct-blink{
     0%, 100%{ background:rgba(47,174,96,0.16); border-color:var(--green); }
@@ -259,29 +259,26 @@
     background:rgba(214,69,65,0.28);
   }
   .opt-btn.wrong-pick .opt-badge{background:var(--red); color:var(--white);}
+
   .status-line{
     text-align:center; margin-top:16px; font-weight:800; color:var(--gray-300); font-size:14px; min-height:18px;
   }
 
   #screen-result .result-trophy{font-size:70px; margin-bottom:6px;}
-  .result-line{
-    display:flex; align-items:center; gap:18px; justify-content:center; margin:18px 0 8px; flex-wrap:wrap;
+  .result-list{display:flex; flex-direction:column; gap:10px; margin:18px auto 8px; max-width:440px; width:100%;}
+  .result-row{
+    display:flex; align-items:center; gap:12px;
+    background:rgba(255,255,255,0.05); border:2px solid rgba(255,255,255,0.1);
+    border-radius:14px; padding:12px 18px;
   }
-  .result-team{text-align:center;}
-  .result-team .rn{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:16px; color:var(--gray-300); word-break:break-word; max-width:150px;}
-  .result-team .rs{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:42px;}
-  .result-dash{font-family:'Baloo 2',sans-serif; font-size:28px; color:var(--gray-500); font-weight:800;}
-  #result-headline{text-align:center;}
+  .result-row.top{border-color:var(--gold); background:rgba(242,183,5,0.14);}
+  .rr-rank{font-family:'Baloo 2',sans-serif; font-weight:800; color:var(--gray-300); width:26px; flex-shrink:0;}
+  .rr-name{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:16px; flex:1; text-align:left; word-break:break-word;}
+  .rr-score{font-family:'Baloo 2',sans-serif; font-weight:800; font-size:22px; color:var(--gold); flex-shrink:0;}
 
   @media (max-width:900px){
-    .game-layout{grid-template-columns:1fr; grid-template-rows:auto auto 1fr;}
-    .rivals-col{flex-direction:row;}
-    .score-panel{flex-direction:row; justify-content:space-between; padding:14px 20px;}
-    .score-panel.rival{flex-direction:row; justify-content:space-between;}
-    .score-panel .sp-name{margin:0;}
-    .score-panel .sp-score{font-size:32px;}
-    .score-panel.rival .sp-score{font-size:26px;}
     .options-grid{grid-template-columns:1fr;}
+    .score-chip .sc-name{max-width:90px;}
   }
 </style>
 </head>
@@ -300,7 +297,7 @@
   <div class="screen active" id="screen-home">
     <div class="card" style="max-width:560px; width:100%;">
       <h1 class="title">Hazır mısınız? 🏆</h1>
-      <p class="lead">Sınıfını seç, 2 rakiple yarış, en yüksek puanı topla!</p>
+      <p class="lead">Sınıfını seç, kodu paylaş, aynı kodu girenler odaya katılsın! (2-6 sınıf)</p>
 
       <div class="choice-row" id="home-choices">
         <div class="choice-card" id="choice-create">
@@ -342,30 +339,17 @@
   </div>
 
   <div class="screen" id="screen-lobby">
-    <div class="card" style="max-width:760px; width:100%; position:relative;">
+    <div class="card" style="max-width:720px; width:100%; position:relative;">
       <div class="lobby-code">
-        <div class="cap">ODA KODU — Diğer sınıflara bu kodu söyleyin</div>
+        <div class="cap">ODA KODU — Bu kodu tüm katılacak sınıflara söyleyin</div>
         <div class="val" id="lobby-code-val">----</div>
       </div>
-      <div class="lobby-teams">
-        <div class="team-slot" id="lobby-team1">
-          <div class="tname" id="lobby-team1-name">—</div>
-          <div class="tstatus waiting" id="lobby-team1-status">Bekleniyor</div>
-        </div>
-        <div class="vs-badge">VS</div>
-        <div class="team-slot" id="lobby-team2">
-          <div class="tname" id="lobby-team2-name">Rakip bekleniyor...</div>
-          <div class="tstatus waiting" id="lobby-team2-status">Bekleniyor</div>
-        </div>
-        <div class="vs-badge">VS</div>
-        <div class="team-slot" id="lobby-team3">
-          <div class="tname" id="lobby-team3-name">Rakip bekleniyor...</div>
-          <div class="tstatus waiting" id="lobby-team3-status">Bekleniyor</div>
-        </div>
-      </div>
+      <div class="lobby-count" id="lobby-count">0/6 sınıf katıldı</div>
+      <div class="lobby-teams-wrap" id="lobby-teams-wrap"></div>
       <div style="text-align:center;">
         <button class="btn btn-primary" id="lobby-ready-btn">Hazırız! ✅</button>
-        <div class="status-line" id="lobby-hint">Diğer sınıfların katılmasını bekleyin.</div>
+        <button class="btn btn-primary" id="lobby-start-btn" style="display:none;">Yarışmayı Başlat 🚀</button>
+        <div class="status-line" id="lobby-hint">Diğer sınıfların kod ile katılmasını bekleyin.</div>
       </div>
 
       <div class="countdown-overlay" id="countdown-overlay">
@@ -376,68 +360,35 @@
   </div>
 
   <div class="screen" id="screen-game">
-    <div class="game-layout">
-      <div class="score-panel mine" id="panel-mine">
-        <div class="sp-cap">SINIFIMIZ</div>
-        <div class="sp-name" id="mine-name">—</div>
-        <div class="sp-score" id="mine-score">0</div>
-      </div>
-
-      <div class="center-col">
-        <div class="meta-row">
-          <div class="q-progress" id="q-progress">Soru 1/35</div>
-          <div class="q-category" id="q-category">Genel Kültür</div>
-          <div class="timer-wrap">
-            <svg width="64" height="64" viewBox="0 0 64 64">
-              <circle class="ring-bg" cx="32" cy="32" r="27"></circle>
-              <circle class="ring-fg" id="ring-fg" cx="32" cy="32" r="27"></circle>
-            </svg>
-            <div class="tnum" id="timer-num">45</div>
-          </div>
-        </div>
-        <div class="question-card" id="question-card">
-          <div class="q-text" id="q-text">Soru yükleniyor...</div>
-          <div class="options-grid" id="options-grid"></div>
-          <div class="status-line" id="game-status-line"></div>
+    <div class="game-shell">
+      <div class="meta-row">
+        <div class="q-progress" id="q-progress">Soru 1/35</div>
+        <div class="q-category" id="q-category">Genel Kültür</div>
+        <div class="timer-wrap">
+          <svg width="64" height="64" viewBox="0 0 64 64">
+            <circle class="ring-bg" cx="32" cy="32" r="27"></circle>
+            <circle class="ring-fg" id="ring-fg" cx="32" cy="32" r="27"></circle>
+          </svg>
+          <div class="tnum" id="timer-num">45</div>
         </div>
       </div>
 
-      <div class="rivals-col">
-        <div class="score-panel rival" id="panel-rival1">
-          <div class="sp-cap">RAKİP SINIF</div>
-          <div class="sp-name" id="rival1-name">—</div>
-          <div class="sp-score" id="rival1-score">0</div>
-        </div>
-        <div class="score-panel rival" id="panel-rival2">
-          <div class="sp-cap">RAKİP SINIF</div>
-          <div class="sp-name" id="rival2-name">—</div>
-          <div class="sp-score" id="rival2-score">0</div>
-        </div>
+      <div class="scoreboard-strip" id="scoreboard-strip"></div>
+
+      <div class="question-card" id="question-card">
+        <div class="q-text" id="q-text">Soru yükleniyor...</div>
+        <div class="options-grid" id="options-grid"></div>
+        <div class="status-line" id="game-status-line"></div>
       </div>
     </div>
   </div>
 
   <div class="screen" id="screen-result">
-    <div class="card" style="max-width:680px; width:100%; text-align:center;">
+    <div class="card" style="max-width:600px; width:100%; text-align:center;">
       <div class="result-trophy">🏆</div>
       <h1 class="title" id="result-headline">Tebrikler!</h1>
-      <div class="result-line">
-        <div class="result-team">
-          <div class="rn" id="result-name1">Sınıf 1</div>
-          <div class="rs" id="result-score1">0</div>
-        </div>
-        <div class="result-dash">—</div>
-        <div class="result-team">
-          <div class="rn" id="result-name2">Sınıf 2</div>
-          <div class="rs" id="result-score2">0</div>
-        </div>
-        <div class="result-dash">—</div>
-        <div class="result-team">
-          <div class="rn" id="result-name3">Sınıf 3</div>
-          <div class="rs" id="result-score3">0</div>
-        </div>
-      </div>
-      <p class="lead" style="margin-top:18px;">Harika bir yarışmaydı!</p>
+      <div class="result-list" id="result-list"></div>
+      <p class="lead" style="margin-top:8px;">Harika bir yarışmaydı!</p>
       <button class="btn btn-primary" id="result-newgame">Yeni Oyun</button>
     </div>
   </div>
@@ -522,20 +473,22 @@ const QUESTION_BANK = [
   { id: 35, category: "Eskişehir", question: "1961 yılında Eskişehir Demiryolu Fabrikası'nda üretilen ilk Türk otomobili hangisidir?", options: ["Devrim", "Anadol", "Murat 124", "Toros"], k: 0 }
 ];
 
-const ROLES = ['host', 'guest1', 'guest2'];
-
 const ANSWER_SECRET = 17;
 function getCorrectIndex(q) {
   return ((q.k - ANSWER_SECRET - q.id) % 4 + 4) % 4;
 }
 
+const MIN_TEAMS = 2;
+const MAX_TEAMS = 6;
+const QUESTION_TIME = 45;
+
 let currentRoomCode = null;
-let myRole = null;
+let myTeamId = null;
 let myTeamName = "";
 let roomRef = null;
 let timerInterval = null;
 let isAnsweredCurrentQ = false;
-const QUESTION_TIME = 45;
+let currentTeamIds = [];
 
 const screens = {
   home: document.getElementById('screen-home'),
@@ -547,10 +500,6 @@ const screens = {
 function showScreen(screenName) {
   Object.keys(screens).forEach(s => screens[s].classList.remove('active'));
   screens[screenName].classList.add('active');
-}
-
-function getOtherRoles(role) {
-  return ROLES.filter(function(r) { return r !== role; });
 }
 
 document.getElementById('choice-create').addEventListener('click', function() {
@@ -584,19 +533,22 @@ document.getElementById('create-submit').addEventListener('click', async functio
   }
 
   myTeamName = nameInput;
-  myRole = 'host';
   currentRoomCode = Math.floor(1000 + Math.random() * 9000).toString();
   roomRef = db.ref('rooms/' + currentRoomCode);
+
+  const teamRef = roomRef.child('teams').push();
+  myTeamId = teamRef.key;
 
   const initialData = {
     code: currentRoomCode,
     status: 'lobby',
-    host: { name: myTeamName, ready: false, score: 0, answer: -1 },
-    guest1: { name: "", ready: false, score: 0, answer: -1 },
-    guest2: { name: "", ready: false, score: 0, answer: -1 },
+    hostId: myTeamId,
+    maxTeams: MAX_TEAMS,
+    teams: {},
     currentQ: 0,
     qStartTime: 0
   };
+  initialData.teams[myTeamId] = { name: myTeamName, ready: false, score: 0, answer: -1 };
 
   await roomRef.set(initialData);
   setupLobbyListeners();
@@ -626,28 +578,24 @@ document.getElementById('join-submit').addEventListener('click', async function(
 
   const roomData = snap.val();
   if(roomData.status !== 'lobby') {
-    errDiv.textContent = "Oda dolu veya yarışma zaten başladı.";
+    errDiv.textContent = "Yarışma zaten başladı, bu odaya katılamazsınız.";
     errDiv.style.display = "block";
     return;
   }
 
-  let targetSlot = null;
-  if(!roomData.guest1 || !roomData.guest1.name) {
-    targetSlot = 'guest1';
-  } else if(!roomData.guest2 || !roomData.guest2.name) {
-    targetSlot = 'guest2';
-  }
-
-  if(!targetSlot) {
-    errDiv.textContent = "Oda dolu! (3 sınıf zaten katıldı)";
+  const existingCount = roomData.teams ? Object.keys(roomData.teams).length : 0;
+  const cap = roomData.maxTeams || MAX_TEAMS;
+  if(existingCount >= cap) {
+    errDiv.textContent = "Oda dolu! (En fazla " + cap + " sınıf katılabilir)";
     errDiv.style.display = "block";
     return;
   }
 
   myTeamName = nameInput;
-  myRole = targetSlot;
+  const teamRef = roomRef.child('teams').push();
+  myTeamId = teamRef.key;
 
-  await roomRef.child(myRole).update({
+  await teamRef.set({
     name: myTeamName,
     ready: false,
     score: 0,
@@ -665,26 +613,47 @@ function enterLobby() {
   document.getElementById('lobby-code-val').textContent = currentRoomCode;
 }
 
-function updateSlotUI(elId, roleData, isMe, defaultText) {
-  const slotEl = document.getElementById(elId);
-  const nameEl = document.getElementById(elId + '-name');
-  const statusEl = document.getElementById(elId + '-status');
+function renderLobbyTeams(data) {
+  const wrap = document.getElementById('lobby-teams-wrap');
+  wrap.innerHTML = '';
+  const teams = data.teams || {};
+  const ids = Object.keys(teams);
+  const cap = data.maxTeams || MAX_TEAMS;
 
-  if(roleData && roleData.name) {
-    nameEl.textContent = roleData.name;
-    statusEl.textContent = roleData.ready ? "HAZIR" : "Bekleniyor";
-    statusEl.className = "tstatus " + (roleData.ready ? "ready" : "waiting");
-  } else {
-    nameEl.textContent = defaultText;
-    statusEl.textContent = "Bekleniyor";
-    statusEl.className = "tstatus waiting";
+  document.getElementById('lobby-count').textContent = ids.length + '/' + cap + ' sınıf katıldı';
+
+  if(ids.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'lobby-empty-hint';
+    empty.textContent = 'Henüz kimse katılmadı.';
+    wrap.appendChild(empty);
+    return;
   }
 
-  if(isMe) {
-    slotEl.classList.add('me');
-  } else {
-    slotEl.classList.remove('me');
-  }
+  ids.forEach(function(id) {
+    const t = teams[id];
+    const slot = document.createElement('div');
+    slot.className = 'team-slot' + (id === myTeamId ? ' me' : '');
+
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'tname';
+    nameDiv.textContent = t.name;
+    slot.appendChild(nameDiv);
+
+    const statusDiv = document.createElement('div');
+    statusDiv.className = 'tstatus ' + (t.ready ? 'ready' : 'waiting');
+    statusDiv.textContent = t.ready ? 'HAZIR' : 'Bekleniyor';
+    slot.appendChild(statusDiv);
+
+    if(id === data.hostId) {
+      const hostTag = document.createElement('div');
+      hostTag.className = 'host-tag';
+      hostTag.textContent = '👑 Kurucu';
+      slot.appendChild(hostTag);
+    }
+
+    wrap.appendChild(slot);
+  });
 }
 
 function setupLobbyListeners() {
@@ -692,18 +661,36 @@ function setupLobbyListeners() {
     const data = snap.val();
     if(!data) return;
 
-    updateSlotUI('lobby-team1', data.host, myRole === 'host', "Bekleniyor");
-    updateSlotUI('lobby-team2', data.guest1, myRole === 'guest1', "Rakip bekleniyor...");
-    updateSlotUI('lobby-team3', data.guest2, myRole === 'guest2', "Rakip bekleniyor...");
+    renderLobbyTeams(data);
 
-    const allJoined = data.host && data.host.name && data.guest1 && data.guest1.name && data.guest2 && data.guest2.name;
-    const allReady = allJoined && data.host.ready && data.guest1.ready && data.guest2.ready;
+    const teams = data.teams || {};
+    const ids = Object.keys(teams);
+    const amIHost = (myTeamId === data.hostId);
+    const allReady = ids.length > 0 && ids.every(function(id) { return teams[id].ready; });
 
-    if(allReady && data.status === 'lobby') {
-      if(myRole === 'host') {
-        roomRef.update({ status: 'starting' });
-        startCountdown();
+    const startBtn = document.getElementById('lobby-start-btn');
+    const readyBtn = document.getElementById('lobby-ready-btn');
+    const hint = document.getElementById('lobby-hint');
+
+    if(amIHost) {
+      startBtn.style.display = 'inline-block';
+      const canStart = ids.length >= MIN_TEAMS && allReady && data.status === 'lobby';
+      startBtn.disabled = !canStart;
+      if(data.status === 'lobby') {
+        if(ids.length < MIN_TEAMS) {
+          hint.textContent = 'Başlamak için en az ' + MIN_TEAMS + ' sınıf gerekiyor.';
+        } else if(!allReady) {
+          hint.textContent = 'Tüm sınıfların hazır olmasını bekleyin.';
+        } else {
+          hint.textContent = 'Hazırsınız! İstediğiniz zaman başlatabilirsiniz.';
+        }
       }
+    } else {
+      startBtn.style.display = 'none';
+    }
+
+    if(teams[myTeamId] && teams[myTeamId].ready) {
+      readyBtn.disabled = true;
     }
 
     if(data.status === 'starting') {
@@ -717,9 +704,13 @@ function setupLobbyListeners() {
 }
 
 document.getElementById('lobby-ready-btn').addEventListener('click', function() {
-  roomRef.child(myRole).update({ ready: true });
+  roomRef.child('teams').child(myTeamId).update({ ready: true });
   document.getElementById('lobby-ready-btn').disabled = true;
-  document.getElementById('lobby-hint').textContent = "Diğer sınıfların hazır olması bekleniyor...";
+});
+
+document.getElementById('lobby-start-btn').addEventListener('click', function() {
+  roomRef.update({ status: 'starting' });
+  startCountdown();
 });
 
 let countdownStarted = false;
@@ -739,13 +730,16 @@ function startCountdown() {
       numDiv.textContent = count;
     } else {
       clearInterval(cdInterval);
-      if(myRole === 'host') {
-        roomRef.update({
-          status: 'playing',
-          currentQ: 0,
-          qStartTime: firebase.database.ServerValue.TIMESTAMP
-        });
-      }
+      roomRef.once('value', function(snap) {
+        const data = snap.val();
+        if(data && data.hostId === myTeamId) {
+          roomRef.update({
+            status: 'playing',
+            currentQ: 0,
+            qStartTime: firebase.database.ServerValue.TIMESTAMP
+          });
+        }
+      });
     }
   }, 1000);
 }
@@ -753,6 +747,33 @@ function startCountdown() {
 function startGameScreen() {
   showScreen('game');
   setupGameListeners();
+}
+
+function renderScoreboard(data) {
+  const strip = document.getElementById('scoreboard-strip');
+  strip.innerHTML = '';
+  const teams = data.teams || {};
+  const arr = Object.keys(teams).map(function(id) {
+    return { id: id, name: teams[id].name, score: teams[id].score };
+  });
+  arr.sort(function(a, b) { return b.score - a.score; });
+
+  arr.forEach(function(t) {
+    const chip = document.createElement('div');
+    chip.className = 'score-chip' + (t.id === myTeamId ? ' mine' : '');
+
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'sc-name';
+    nameSpan.textContent = t.name;
+
+    const scoreSpan = document.createElement('span');
+    scoreSpan.className = 'sc-score';
+    scoreSpan.textContent = t.score;
+
+    chip.appendChild(nameSpan);
+    chip.appendChild(scoreSpan);
+    strip.appendChild(chip);
+  });
 }
 
 function setupGameListeners() {
@@ -765,21 +786,12 @@ function setupGameListeners() {
       return;
     }
 
-    const myData = data[myRole];
-    const otherRoles = getOtherRoles(myRole);
-    const rival1Data = data[otherRoles[0]];
-    const rival2Data = data[otherRoles[1]];
-
-    document.getElementById('mine-name').textContent = myData.name;
-    document.getElementById('mine-score').textContent = myData.score;
-    document.getElementById('rival1-name').textContent = rival1Data.name;
-    document.getElementById('rival1-score').textContent = rival1Data.score;
-    document.getElementById('rival2-name').textContent = rival2Data.name;
-    document.getElementById('rival2-score').textContent = rival2Data.score;
+    currentTeamIds = Object.keys(data.teams || {});
+    renderScoreboard(data);
 
     const qIndex = data.currentQ;
     if(qIndex >= QUESTION_BANK.length) {
-      if(myRole === 'host') roomRef.update({ status: 'finished' });
+      if(data.hostId === myTeamId) roomRef.update({ status: 'finished' });
       return;
     }
 
@@ -817,16 +829,16 @@ function renderQuestion(qIndex, data) {
     startTimer(data.qStartTime);
   }
 
-  const myData = data[myRole];
+  const myData = data.teams[myTeamId];
 
   if(myData.answer !== -1 && !isAnsweredCurrentQ) {
     isAnsweredCurrentQ = true;
     showAnswerFeedback(myData.answer, getCorrectIndex(question));
   }
 
-  const allAnswered = ROLES.every(function(r) { return data[r].answer !== -1; });
+  const allAnswered = currentTeamIds.every(function(id) { return data.teams[id].answer !== -1; });
   if(allAnswered) {
-    if(myRole === 'host') {
+    if(data.hostId === myTeamId) {
       setTimeout(function() { advanceToNextQuestion(qIndex); }, 1500);
     }
   }
@@ -857,9 +869,12 @@ function startTimer(qStartTime) {
     if(remaining <= 0) {
       clearInterval(timerInterval);
       disableOptions();
-      if(myRole === 'host') {
-        advanceToNextQuestion(activeQIndex);
-      }
+      roomRef.once('value', function(snap) {
+        const data = snap.val();
+        if(data && data.hostId === myTeamId) {
+          advanceToNextQuestion(activeQIndex);
+        }
+      });
     }
   }, 200);
 }
@@ -872,18 +887,18 @@ function sendAnswer(optIndex, correctIndex) {
 
   const isCorrect = (optIndex === correctIndex);
 
-  roomRef.child(myRole).once('value', function(snap) {
+  roomRef.child('teams').child(myTeamId).once('value', function(snap) {
     const val = snap.val();
     const currentScore = val.score || 0;
     const newScore = isCorrect ? currentScore + 10 : currentScore;
 
-    roomRef.child(myRole).update({
+    roomRef.child('teams').child(myTeamId).update({
       answer: optIndex,
       score: newScore
     });
   });
 
-  document.getElementById('game-status-line').textContent = "Cevabınız iletildi, rakipler/süre bekleniyor...";
+  document.getElementById('game-status-line').textContent = "Cevabınız iletildi, diğer sınıflar/süre bekleniyor...";
 }
 
 function showAnswerFeedback(pickedIndex, correctIndex) {
@@ -903,42 +918,61 @@ function disableOptions() {
 }
 
 function advanceToNextQuestion(currentQIndex) {
-  roomRef.update({
+  const updates = {
     currentQ: currentQIndex + 1,
-    qStartTime: firebase.database.ServerValue.TIMESTAMP,
-    'host/answer': -1,
-    'guest1/answer': -1,
-    'guest2/answer': -1
+    qStartTime: firebase.database.ServerValue.TIMESTAMP
+  };
+  currentTeamIds.forEach(function(id) {
+    updates['teams/' + id + '/answer'] = -1;
   });
+  roomRef.update(updates);
 }
 
 function showResults(data) {
   clearInterval(timerInterval);
   showScreen('result');
 
-  const teams = [
-    { name: data.host.name, score: data.host.score },
-    { name: data.guest1.name, score: data.guest1.score },
-    { name: data.guest2.name, score: data.guest2.score }
-  ];
+  const teams = data.teams || {};
+  const arr = Object.keys(teams).map(function(id) {
+    return { name: teams[id].name, score: teams[id].score };
+  });
+  arr.sort(function(a, b) { return b.score - a.score; });
 
-  document.getElementById('result-name1').textContent = teams[0].name;
-  document.getElementById('result-score1').textContent = teams[0].score;
-  document.getElementById('result-name2').textContent = teams[1].name;
-  document.getElementById('result-score2').textContent = teams[1].score;
-  document.getElementById('result-name3').textContent = teams[2].name;
-  document.getElementById('result-score3').textContent = teams[2].score;
+  const list = document.getElementById('result-list');
+  list.innerHTML = '';
+  const maxScore = arr.length ? arr[0].score : 0;
 
+  arr.forEach(function(t, idx) {
+    const row = document.createElement('div');
+    row.className = 'result-row' + (t.score === maxScore ? ' top' : '');
+
+    const rank = document.createElement('span');
+    rank.className = 'rr-rank';
+    rank.textContent = (idx + 1) + '.';
+
+    const name = document.createElement('span');
+    name.className = 'rr-name';
+    name.textContent = t.name;
+
+    const score = document.createElement('span');
+    score.className = 'rr-score';
+    score.textContent = t.score;
+
+    row.appendChild(rank);
+    row.appendChild(name);
+    row.appendChild(score);
+    list.appendChild(row);
+  });
+
+  const winners = arr.filter(function(t) { return t.score === maxScore; });
   const headline = document.getElementById('result-headline');
-  const maxScore = Math.max(teams[0].score, teams[1].score, teams[2].score);
-  const winners = teams.filter(function(t) { return t.score === maxScore; });
 
-  if(winners.length === teams.length) {
+  if(winners.length === arr.length && arr.length > 1) {
     headline.textContent = "Dostluk Kazandı! Herkes Berabere! 🤝";
   } else if(winners.length === 1) {
     headline.textContent = winners[0].name + " Kazandı! 🎉";
   } else {
-    headline.textContent = winners.map(function(w) { return w.name; }).join(" ve ") + " Berabere Kazandı! 🎉";
+    headline.textContent = winners.map(function(w) { return w.name; }).join(' ve ') + " Berabere Kazandı! 🎉";
   }
 }
 
