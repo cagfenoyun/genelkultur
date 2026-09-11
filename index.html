@@ -559,53 +559,53 @@ function getServerNow() {
 
 const QUESTION_BANK = [
   // Fen Bilimleri (5 Soru)
-  { id: 1, category: "Fen Bilimleri", question: "Aşağıdakilerden hangisi canlıların temel özelliklerinden biridir?", options: ["Yürümek", "Uçmak", "Konuşmak", "Beslenme"], k: 1 },
-  { id: 2, category: "Fen Bilimleri", question: "Bitkilerin fotosentez yapması için hangisine ihtiyacı vardır?", options: ["Güneş ışığı", "Karanlık", "Soğuk hava", "Tuz"], k: 3 },
-  { id: 3, category: "Fen Bilimleri", question: "Vücudumuzda kanı pompalayan organ hangisidir?", options: ["Akciğer", "Mide", "Kalp", "Beyin"], k: 2 },
-  { id: 4, category: "Fen Bilimleri", question: "Suyun katı hâline ne ad verilir?", options: ["Buhar", "Buz", "Sis", "Yağmur"], k: 2 },
-  { id: 5, category: "Fen Bilimleri", question: "Mıknatıs hangi maddeyi çeker?", options: ["Demir", "Plastik", "Tahta", "Kağıt"], k: 2 },
+  { id: 1, category: "Fen Bilimleri", question: "Bitkiler fotosentez sırasında havaya hangi gazı verir?", options: ["Karbondioksit", "Azot", "Oksijen", "Hidrojen"], k: 0 },
+  { id: 2, category: "Fen Bilimleri", question: "İnsan vücudundaki en küçük kemik hangi organda bulunur?", options: ["Kulak", "Burun", "El", "Ayak"], k: 3 },
+  { id: 3, category: "Fen Bilimleri", question: "Newton'un hareket yasalarına göre, üzerine etki eden net kuvvet sıfır olan bir cisim ne yapar?", options: ["Hızlanır", "Yavaşlar", "Sabit hızla hareket eder ya da durur", "Yön değiştirir"], k: 2 },
+  { id: 4, category: "Fen Bilimleri", question: "Periyodik tabloda bilinen en hafif element hangisidir?", options: ["Helyum", "Hidrojen", "Lityum", "Karbon"], k: 2 },
+  { id: 5, category: "Fen Bilimleri", question: "Hücrenin enerji üretim merkezi olarak bilinen organeli hangisidir?", options: ["Çekirdek", "Ribozom", "Mitokondri", "Golgi cisimciği"], k: 0 },
 
   // Sosyal Bilgiler (5 Soru)
-  { id: 6, category: "Sosyal Bilgiler", question: "Türkiye'nin başkenti neresidir?", options: ["İstanbul", "İzmir", "Ankara", "Bursa"], k: 1 },
-  { id: 7, category: "Sosyal Bilgiler", question: "Ülkemizin bayrağında hangi renkler bulunur?", options: ["Mavi-Beyaz", "Sarı-Kırmızı", "Yeşil-Beyaz", "Kırmızı-Beyaz"], k: 3 },
-  { id: 8, category: "Sosyal Bilgiler", question: "Cumhuriyetimizin kurucusu kimdir?", options: ["Fatih Sultan Mehmet", "Mustafa Kemal Atatürk", "II. Mahmut", "Osman Gazi"], k: 2 },
-  { id: 9, category: "Sosyal Bilgiler", question: "29 Ekim hangi bayramın yıl dönümüdür?", options: ["Cumhuriyet Bayramı", "Zafer Bayramı", "Gençlik Bayramı", "Egemenlik Bayramı"], k: 2 },
-  { id: 10, category: "Sosyal Bilgiler", question: "Ülkemizi çevreleyen denizlerden biri hangisidir?", options: ["Kızıldeniz", "Hazar Denizi", "Karadeniz", "Kuzey Denizi"], k: 1 },
+  { id: 6, category: "Sosyal Bilgiler", question: "Aşağıdakilerden hangisi Türkiye'nin kara sınırı komşusu değildir?", options: ["Yunanistan", "Irak", "Mısır", "İran"], k: 1 },
+  { id: 7, category: "Sosyal Bilgiler", question: "Osmanlı Devleti'nin kurucusu kimdir?", options: ["Osman Gazi", "Orhan Gazi", "I. Murad", "Fatih Sultan Mehmet"], k: 0 },
+  { id: 8, category: "Sosyal Bilgiler", question: "Lozan Antlaşması hangi yılda imzalanmıştır?", options: ["1920", "1923", "1919", "1922"], k: 2 },
+  { id: 9, category: "Sosyal Bilgiler", question: "Türkiye'nin nüfusa göre en kalabalık ikinci ili hangisidir?", options: ["Ankara", "İzmir", "Bursa", "Antalya"], k: 2 },
+  { id: 10, category: "Sosyal Bilgiler", question: "Birleşmiş Milletler'in genel merkezi hangi şehirdedir?", options: ["Cenevre", "Paris", "New York", "Londra"], k: 1 },
 
   // Türkçe (5 Soru)
-  { id: 11, category: "Türkçe", question: "'Mutlu' kelimesinin eş anlamlısı hangisidir?", options: ["Üzgün", "Sevinçli", "Kızgın", "Yorgun"], k: 1 },
-  { id: 12, category: "Türkçe", question: "'Büyük' kelimesinin zıt anlamlısı hangisidir?", options: ["Kısa", "Uzun", "Geniş", "Küçük"], k: 0 },
-  { id: 13, category: "Türkçe", question: "Bir cümlenin sonunda genellikle hangi noktalama işareti bulunur?", options: ["Nokta", "Virgül", "Ünlem", "Soru işareti"], k: 2 },
-  { id: 14, category: "Türkçe", question: "'Kalem, defter, silgi' kelimeleri hangi kelime türüne örnektir?", options: ["Fiil", "İsim", "Sıfat", "Zamir"], k: 0 },
-  { id: 15, category: "Türkçe", question: "Hikâyelerde olayların geçtiği yere ne denir?", options: ["Zaman", "Kahraman", "Mekân (Yer)", "Konu"], k: 2 },
+  { id: 11, category: "Türkçe", question: "\"Kitabı okumuş olsaydım sınavdan yüksek alırdım.\" cümlesinde kaç fiil vardır?", options: ["1", "2", "3", "4"], k: 1 },
+  { id: 12, category: "Türkçe", question: "Aşağıdaki cümlelerin hangisinde altı çizili olması gereken kelime mecaz anlamda kullanılmıştır?", options: ["Taş bahçeye düştü.", "Bu haberi duyunca yüreği taş kesildi.", "İşçi taşı kırdı.", "Elindeki taş çok ağırdı."], k: 2 },
+  { id: 13, category: "Türkçe", question: "\"Sen de mi Brütüs?\" cümlesi anlatım biçimlerinden hangisine örnektir?", options: ["Öyküleme", "Betimleme", "Diyalog (Konuşma)", "Açıklama"], k: 0 },
+  { id: 14, category: "Türkçe", question: "Aşağıdaki kelimelerden hangisi birleşik (bileşik) bir kelimedir?", options: ["Kitaplık", "Hanımeli", "Öğretmen", "Çalışkan"], k: 0 },
+  { id: 15, category: "Türkçe", question: "\"Geldi, gördü, yendi.\" cümlesindeki fiiller hangi zaman ekini almıştır?", options: ["Geniş zaman", "Gelecek zaman", "Görülen geçmiş zaman", "Şimdiki zaman"], k: 2 },
 
   // Matematik (5 Soru)
-  { id: 16, category: "Matematik", question: "7 x 8 işleminin sonucu kaçtır?", options: ["54", "48", "64", "56"], k: 0 },
-  { id: 17, category: "Matematik", question: "100 sayısının yarısı kaçtır?", options: ["50", "40", "25", "60"], k: 2 },
-  { id: 18, category: "Matematik", question: "Bir düzgün karenin kaç kenarı vardır?", options: ["3", "4", "5", "6"], k: 0 },
-  { id: 19, category: "Matematik", question: "45 + 37 işleminin sonucu kaçtır?", options: ["72", "92", "82", "62"], k: 2 },
-  { id: 20, category: "Matematik", question: "Bir düzineda kaç tane nesne vardır?", options: ["12", "10", "14", "20"], k: 1 },
+  { id: 16, category: "Matematik", question: "Bir sayının 3 katının 5 fazlası 23 olduğuna göre bu sayı kaçtır?", options: ["6", "5", "7", "8"], k: 1 },
+  { id: 17, category: "Matematik", question: "144 sayısının pozitif tam bölenlerinden kaç tanesi çift sayıdır?", options: ["12", "10", "9", "15"], k: 2 },
+  { id: 18, category: "Matematik", question: "Bir üçgenin iç açılarının ölçüleri toplamı kaç derecedir?", options: ["90", "180", "270", "360"], k: 0 },
+  { id: 19, category: "Matematik", question: "2/3 ile 3/4 kesirlerinden hangisi daha büyüktür?", options: ["2/3", "3/4", "Eşittir", "Karşılaştırılamaz"], k: 1 },
+  { id: 20, category: "Matematik", question: "Karesi 81 olan pozitif tam sayı kaçtır?", options: ["7", "8", "9", "10"], k: 3 },
 
   // Din Kültürü ve Ahlak Bilgisi (5 Soru)
-  { id: 21, category: "Din Kültürü ve Ahlak Bilgisi", question: "Müslümanların kutsal kitabı hangisidir?", options: ["Tevrat", "İncil", "Zebur", "Kur'an-ı Kerim"], k: 1 },
-  { id: 22, category: "Din Kültürü ve Ahlak Bilgisi", question: "Müslümanların ibadet ettiği kutsal mekâna ne ad verilir?", options: ["Kilise", "Cami", "Havra", "Tapınak"], k: 0 },
-  { id: 23, category: "Din Kültürü ve Ahlak Bilgisi", question: "İslam'ın beş şartından biri olan, muhtaç kişilere yardım etmeyi ifade eden ibadet hangisidir?", options: ["Zekât", "Oruç", "Namaz", "Hac"], k: 0 },
-  { id: 24, category: "Din Kültürü ve Ahlak Bilgisi", question: "Ramazan ayında tutulan ibadete ne ad verilir?", options: ["Namaz", "Hac", "Oruç", "Zekât"], k: 3 },
-  { id: 25, category: "Din Kültürü ve Ahlak Bilgisi", question: "Büyüklerimize saygı, küçüklerimize sevgi göstermek hangi değerlerimizdendir?", options: ["Bencillik", "Tembellik", "Kibir", "Güzel ahlak"], k: 1 },
+  { id: 21, category: "Din Kültürü ve Ahlak Bilgisi", question: "Kur'an-ı Kerim'in ilk inen suresi hangisidir?", options: ["Fatiha", "Alak", "Bakara", "Nas"], k: 3 },
+  { id: 22, category: "Din Kültürü ve Ahlak Bilgisi", question: "İslam'da temel inanç esaslarının toplandığı metne ne ad verilir?", options: ["Amentü", "Sünnet", "Hadis", "Fıkıh"], k: 3 },
+  { id: 23, category: "Din Kültürü ve Ahlak Bilgisi", question: "Hz. Muhammed hangi şehirde doğmuştur?", options: ["Medine", "Mekke", "Kudüs", "Taif"], k: 1 },
+  { id: 24, category: "Din Kültürü ve Ahlak Bilgisi", question: "Zekâtın verilebilmesi için gereken asgari mal/servet miktarına ne ad verilir?", options: ["Nisap", "Fitre", "Sadaka", "Vakıf"], k: 1 },
+  { id: 25, category: "Din Kültürü ve Ahlak Bilgisi", question: "Kur'an-ı Kerim toplam kaç sureden oluşur?", options: ["99", "114", "124", "140"], k: 3 },
 
   // İngilizce (5 Soru)
-  { id: 26, category: "İngilizce", question: "'Apple' kelimesinin Türkçe anlamı nedir?", options: ["Armut", "Elma", "Muz", "Çilek"], k: 0 },
-  { id: 27, category: "İngilizce", question: "'Cat' kelimesinin Türkçe karşılığı nedir?", options: ["Kedi", "Kuş", "Köpek", "Balık"], k: 0 },
-  { id: 28, category: "İngilizce", question: "'How are you?' sorusuna en uygun cevap hangisidir?", options: ["My name is Ali", "It is Monday", "I am fine thanks", "I am ten"], k: 3 },
-  { id: 29, category: "İngilizce", question: "'Blue' kelimesi hangi renk anlamına gelir?", options: ["Kırmızı", "Mavi", "Sarı", "Yeşil"], k: 3 },
-  { id: 30, category: "İngilizce", question: "'Monday' kelimesi haftanın hangi gününü ifade eder?", options: ["Salı", "Pazar", "Cuma", "Pazartesi"], k: 2 },
+  { id: 26, category: "İngilizce", question: "Which word is the antonym of \"increase\"?", options: ["Rise", "Grow", "Decrease", "Expand"], k: 1 },
+  { id: 27, category: "İngilizce", question: "Which sentence is grammatically correct?", options: ["She don't like coffee.", "She doesn't likes coffee.", "She doesn't like coffee.", "She not like coffee."], k: 2 },
+  { id: 28, category: "İngilizce", question: "What is the past tense of \"go\"?", options: ["Goed", "Gone", "Went", "Going"], k: 3 },
+  { id: 29, category: "İngilizce", question: "Which word is a synonym of \"difficult\"?", options: ["Easy", "Simple", "Challenging", "Basic"], k: 0 },
+  { id: 30, category: "İngilizce", question: "Complete the sentence: \"If I ___ rich, I would travel the world.\"", options: ["am", "was", "were", "be"], k: 1 },
 
   // Genel Kültür (5 Soru)
-  { id: 31, category: "Genel Kültür", question: "Bir yılda kaç ay vardır?", options: ["12", "11", "10", "13"], k: 0 },
-  { id: 32, category: "Genel Kültür", question: "Dünya'nın uydusu hangisidir?", options: ["Güneş", "Mars", "Ay", "Venüs"], k: 3 },
-  { id: 33, category: "Genel Kültür", question: "Bir haftada kaç gün vardır?", options: ["5", "7", "6", "8"], k: 3 },
-  { id: 34, category: "Genel Kültür", question: "Olimpiyat Oyunları kaç yılda bir düzenlenir?", options: ["2", "3", "5", "4"], k: 2 },
-  { id: 35, category: "Genel Kültür", question: "Trafik ışıklarında 'dur' anlamına gelen renk hangisidir?", options: ["Kırmızı", "Sarı", "Yeşil", "Mavi"], k: 0 }
+  { id: 31, category: "Genel Kültür", question: "Dünyanın en uzun nehri kabul edilen nehir hangisidir?", options: ["Amazon", "Nil", "Mississippi", "Yangtze"], k: 1 },
+  { id: 32, category: "Genel Kültür", question: "İlk yapay uyduyu (Sputnik 1) uzaya gönderen ülke hangisidir?", options: ["ABD", "Sovyetler Birliği", "Çin", "Almanya"], k: 2 },
+  { id: 33, category: "Genel Kültür", question: "İnsan vücudundaki en büyük organ hangisidir?", options: ["Karaciğer", "Beyin", "Deri", "Akciğer"], k: 0 },
+  { id: 34, category: "Genel Kültür", question: "Dünyanın en yüksek dağı hangisidir?", options: ["K2", "Everest", "Kilimanjaro", "Aconcagua"], k: 0 },
+  { id: 35, category: "Genel Kültür", question: "Standart bir satranç tahtasında kaç kare vardır?", options: ["32", "48", "64", "100"], k: 2 }
 ];
 
 const ANSWER_SECRET = 17;
